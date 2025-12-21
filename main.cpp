@@ -30,16 +30,24 @@ constexpr int DEFAULT_TRUMP_MARRIAGE = 40;
 constexpr bool DEFAULT_ARE_POINTS_VISIBLE = true;
 constexpr bool DEFAULT_LAST_TRICK_BONUS = true;
 
+constexpr int SUIT_MAX_LENGTH = 4;  //UTF-8 (3 bytes) + "\0"
+constexpr int RANK_MAX_LENGTH = 3;  //"10" + "\0" at most
+
+constexpr int DECK_MAX_SIZE = 24;
+constexpr int HAND_MAX_SIZE = 6;
+constexpr int THROWN_CARDS_MAX_NUMBER = 2;
+
+
 int main()
 {
     setupConsole(); // Ensures proper display of suit symbols (♣,♠,♥,♦)
 
     bool hasGameStarted = false;
     bool wereSettingsModified = false;
-    std::string trumpSuit; // is one of ("♣","♠","♥","♦") stored as a string
-    std::vector<std::string> deck;
-    std::vector<std::string> P1Hand, P2Hand;
-    std::vector<std::string> tableCards;
+    char trumpSuit[SUIT_MAX_LENGTH]; // is one of ("♣","♠","♥","♦")
+    Card deck[DECK_MAX_SIZE];
+    Card P1Hand[HAND_MAX_SIZE], P2Hand[HAND_MAX_SIZE];
+    Card thrownCards[THROWN_CARDS_MAX_NUMBER];
     int firstPlayedPlayerId = 0;
     int P1GamePoints = 0, P2Gamepoints = 0;
     int P1RoundPoints = 0, P2RoundPoints = 0;
@@ -292,58 +300,58 @@ int main()
 
             if (currentPlayerId == 1)
             {
-                tableCards.push_back(P1Hand.at(index));
+                thrownCards.push_back(P1Hand.at(index));
                 std::cout << "P1 played " << P1Hand.at(index) << std::endl;
                 P1Hand.erase(P1Hand.begin() + index); // Removing the played card from the hand
             }
             else
             {
-                tableCards.push_back(P2Hand.at(index));
+                thrownCards.push_back(P2Hand.at(index));
                 std::cout << "P2 played " << P2Hand.at(index) << std::endl;
                 P2Hand.erase(P2Hand.begin() + index); // Removing the played card from the hand
             }
 
             // If a player puts the first hand on the "table":
-            if (tableCards.size() == 1)
+            if (thrownCards.size() == 1)
             {
                 firstPlayedPlayerId = currentPlayerId;
             }
-            else if (tableCards.size() == 2) // If both players have played a card on the "table"
+            else if (thrownCards.size() == 2) // If both players have played a card on the "table"
             {
                 bool P1WinsTrick;
 
-                if (isTrump(tableCards.front(), trumpSuit) && !isTrump(tableCards.back(), trumpSuit))
+                if (isTrump(thrownCards.front(), trumpSuit) && !isTrump(thrownCards.back(), trumpSuit))
                 {                                             // only first card is a trump
                     P1WinsTrick = (firstPlayedPlayerId == 1); // when first player plays first, he gives a trump
                 }
-                else if (!isTrump(tableCards.back(), trumpSuit) && isTrump(tableCards.front(), trumpSuit))
+                else if (!isTrump(thrownCards.back(), trumpSuit) && isTrump(thrownCards.front(), trumpSuit))
                 {                                             // only second card is a trump
                     P1WinsTrick = (firstPlayedPlayerId == 1); // when second player played first, then first player played trump
                 }
-                else if (isTrump(tableCards.back(), trumpSuit) && isTrump(tableCards.front(), trumpSuit))
-                {                                                                      // Both cards are trump
-                    P1WinsTrick = compareCards(tableCards.front(), tableCards.back()); // Stronger card wins
+                else if (isTrump(thrownCards.back(), trumpSuit) && isTrump(thrownCards.front(), trumpSuit))
+                {                                                                        // Both cards are trump
+                    P1WinsTrick = compareCards(thrownCards.front(), thrownCards.back()); // Stronger card wins
                 }
                 else
                 { // Both cards are non-trump
-                    std::string dominantSuit = getSuit(firstPlayedPlayerId == 1 ? tableCards.front() : tableCards.back());
+                    std::string dominantSuit = getSuit(firstPlayedPlayerId == 1 ? thrownCards.front() : thrownCards.back());
                     // Dominant suit is the first played card's suit
 
-                    if (getSuit(tableCards.back()) != dominantSuit)
+                    if (getSuit(thrownCards.back()) != dominantSuit)
                     { // If second card's suit doesn't match the first one
                         P1WinsTrick = (firstPlayedPlayerId == 1);
                         // If P1 played first, he wins the trick
                     }
                     else
                     {
-                        P1WinsTrick = compareCards(tableCards.front(), tableCards.back()); // Stronger card wins
+                        P1WinsTrick = compareCards(thrownCards.front(), thrownCards.back()); // Stronger card wins
                     }
                 }
 
                 // CLOSED CHECK NEEDS TO BE ADDED!
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
 
-                tableCards.clear();
+                thrownCards.clear();
             }
 
             currentPlayerId = 3 - currentPlayerId; // Looping the current player's turn
