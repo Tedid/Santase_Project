@@ -1,13 +1,13 @@
 #include "gameFunctions.hpp"
 
-const char* COLOR_RED = "\033[31m";
-const char* COLOR_BLACK = "\033[30m";
-const char* COLOR_RESET = "\033[0m";
+const char *COLOR_RED = "\033[31m";
+const char *COLOR_BLACK = "\033[30m";
+const char *COLOR_RESET = "\033[0m";
 
-const std::string HEARTS = COLOR_RED + "♥" + COLOR_RESET;
-const std::string DIAMONDS = COLOR_RED + "♦" + COLOR_RESET;
-const std::string CLUBS = COLOR_BLACK + "♣" + COLOR_RESET;
-const std::string SPADES = COLOR_BLACK + "♠" + COLOR_RESET;
+const char *HEARTS = "♥";
+const char *DIAMONDS = "♦";
+const char *CLUBS = "♣";
+const char *SPADES = "♠";
 
 // Sorting priorities:----------------------
 const std::string SUIT_CHARS = "♠♥♦♣";
