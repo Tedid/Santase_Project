@@ -1,24 +1,27 @@
 #pragma once
-#include <vector>
 // #include <fstream>
+#include <iostream>
 #include <algorithm>
 #include <random>
 #include <string>
+#include <cstddef> // For size_t
+#include <sstream>
 
 #include "cardStruct.hpp"
 
+constexpr int DECK_SIZE = 24;
+constexpr int HAND_SIZE = 6;
 
-bool isTrump(const std::string &card, const std::string &trumpSuit);
-void initializeDeck(std::vector<std::string> &deck);
-void dealCards(std::vector<std::string> &deck, std::vector<std::string> &P1, std::vector<std::string> &P2);
-void revealTrump(std::vector<std::string> &deck, std::string &trumpSuit);
-int getSuitValue(const std::string &card);
-int getRankValue(const std::string &card);
-bool compareCards(const std::string &card1, const std::string &card2);
+bool isTrump(const Card &card, const char *trumpSuit);
+void initializeDeck(Card deck[DECK_SIZE]);
+void dealCards(Card deck[DECK_SIZE], Card P1Hand[HAND_SIZE], Card P2Hand[HAND_SIZE]);
+void revealTrump(Card deck[DECK_SIZE], char *trumpSuit);
+int getSuitValue(const Card &card);
+int getRankValue(const Card &card);
+bool compareCards(const Card &card1, const Card &card2);
 
-std::string generateRulesString(const int requiredPointsToWin, const int nonTrumpMarriage, const int trumpMarriage);
-std::string getSuit(std::string card);
-std::string playerHand(const std::vector<std::string> &hand);
-
+void printRulesString(const int requiredPointsToWin, const int nonTrumpMarriage, const int trumpMarriage);
+const char *getSuit(const Card &card);
 void cardPrint(const Card &card);
+void printPlayerHand(const Card hand[HAND_SIZE], size_t size);
 

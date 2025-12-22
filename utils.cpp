@@ -7,34 +7,33 @@ void setupConsole()
 #endif
 }
 
-bool isDigit(const std::string &str)
-{
-    if (str.empty())
-    {
-        return false;
-    }
-
-    for (int i = 0; i < str.length(); i++)
-    {
-        if (!std::isdigit(static_cast<unsigned char>(str[i])))
-        {
-            return false; // Found a non-digit character
+bool isDigit(const char *str) {
+    if (!str) return false;
+    const char *pointer = str;
+    while (*pointer != '\0') { 
+        if(!std::isdigit(*pointer)){
+            return false;
         }
+        pointer++;
     }
-
     return true;
 }
 
-bool getConfirmation(const std::string &prompt)
+bool getConfirmation(const char *prompt)
 {
     std::cout << prompt << " [y/n]: " << std::endl;
-    std::string answer;
+    char *answer;
 
     while (true)
     {
-        std::getline(std::cin, answer);
+        std::cin >> answer;
 
-        if (answer.length() == 1)
+        int answerLen = 0;
+        char *pointer = answer;
+        while(*pointer != '\0'){
+            answerLen++;
+        }
+        if (answerLen == 1)
         {
             char c = std::tolower(answer[0]);
 

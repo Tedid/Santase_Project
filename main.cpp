@@ -20,6 +20,7 @@
 #include <random>
 #include <windows.h>
 #include <cctype>
+#include <cstring>
 
 #include "utils.hpp"
 #include "gameFunctions.hpp"
@@ -33,13 +34,9 @@ constexpr bool DEFAULT_LAST_TRICK_BONUS = true;
 
 constexpr size_t MAX_STR_LEN = 1024;
 
-constexpr int SUIT_MAX_LENGTH = 4;  //UTF-8 (3 bytes) + "\0"
-constexpr int RANK_MAX_LENGTH = 3;  //"10" + "\0" at most
-
 constexpr int DECK_MAX_SIZE = 24;
 constexpr int HAND_MAX_SIZE = 6;
 constexpr int THROWN_CARDS_MAX_NUMBER = 2;
-
 
 int main()
 {
@@ -49,8 +46,14 @@ int main()
     bool wereSettingsModified = false;
     char trumpSuit[SUIT_MAX_LENGTH]; // is one of ("♣","♠","♥","♦")
     Card deck[DECK_MAX_SIZE];
+    size_t deckSize = 0;
+
     Card P1Hand[HAND_MAX_SIZE], P2Hand[HAND_MAX_SIZE];
+    int P1HandSize = 0, P2HandSize = 0;
+
     Card thrownCards[THROWN_CARDS_MAX_NUMBER];
+    int thrownCount = 0;
+
     int firstPlayedPlayerId = 0;
     int P1GamePoints = 0, P2Gamepoints = 0;
     int P1RoundPoints = 0, P2RoundPoints = 0;
@@ -77,10 +80,24 @@ int main()
         else
         {
             std::cout << "P" << currentPlayerId << "'s turn:" << std::endl;
-            std::cout << "Hand: " << playerHand((currentPlayerId == 1 ? P1Hand : P2Hand)) << std::endl;
+            if (currentPlayerId == 1)
+            {
+                std::cout << "Hand: ";
+                printPlayerHand(P1Hand, P1HandSize);
+                std::cout << std::endl;
+            }
+
+            else
+            {
+                std::cout << "Hand: ";
+                printPlayerHand(P2Hand, P2HandSize);
+                std::cout << std::endl;
+            }
+
             std::cout << "Trump suit: " << trumpSuit << std::endl;
-            std::cout << "Bottom card: " << deck.front() << std::endl;
-            std::cout << "Cards left in deck: " << deck.size() << std::endl;
+            if (deckSize > 0)
+                std::cout << "Bottom card: " << deck[0].rank << getSuit(deck[0]) << std::endl;
+            std::cout << "Cards left in deck: " << deckSize << std::endl;
             std::cout << std::endl;
         }
 
@@ -96,7 +113,8 @@ int main()
         firstCommWord[spacePos] = '\0';
 
         // lower case
-        for (int i = 0; i < spacePos; i++) {
+        for (int i = 0; i < spacePos; i++)
+        {
             firstCommWord[i] = std::tolower(firstCommWord[i]);
         }
 
@@ -106,7 +124,7 @@ int main()
             // In order to not reset the game on mistake:
             if (hasGameStarted)
             {
-                std::string prompt = "This will reset this whole game and start it from scratch. Continue?";
+                const char *prompt = "This will reset this whole game and start it from scratch. Continue?";
                 if (!getConfirmation(prompt))
                 {
                     continue; // Dismiss the command
@@ -115,7 +133,7 @@ int main()
 
             if (wereSettingsModified)
             {
-                std::string prompt = "Do you want to reset the settings to their defaults?";
+                const char *prompt = "Do you want to reset the settings to their defaults?";
                 if (getConfirmation(prompt))
                 {
                     requiredPointsToWin = DEFAULT_REQUIRED_POINTS_TO_WIN;
@@ -134,12 +152,14 @@ int main()
 
             initializeDeck(deck); // Shuffling deck
             dealCards(deck, P1Hand, P2Hand);
+            P1HandSize = HAND_MAX_SIZE;
+            P2HandSize = HAND_MAX_SIZE;
             revealTrump(deck, trumpSuit); // Top card goes under and becomes a trump
         }
         else if (strcmp(firstCommWord, "rules") == 0)
         {
-            std::string ruleset = generateRulesString(requiredPointsToWin, nonTrumpMarriage, trumpMarriage);
-            std::cout << ruleset << std::endl;
+            printRulesString(requiredPointsToWin, nonTrumpMarriage, trumpMarriage);
+            std::cout << std::endl;
         }
         else if (strcmp(firstCommWord, "settings") == 0)
         {
@@ -152,25 +172,25 @@ int main()
                 std::cout << "4) Last trick +10 [" << (lastTrickBonus ? "on" : "off") << "]" << std::endl;
                 std::cout << "Enter number to change or 'back' to apply and return: ";
 
-                std::string comm;
-
-                std::getline(std::cin, comm);
+                char comm[MAX_STR_LEN];              
+                std::cin.getline(comm, MAX_STR_LEN); 
 
                 // Transforming comm toLower
-                std::transform(comm.begin(), comm.end(), comm.begin(), [](unsigned char c)
-                               { return std::tolower(c); });
+                for (size_t i = 0; comm[i] != '\0'; ++i)
+                {
+                    comm[i] = std::tolower(comm[i]);
+                }
 
-                if (comm == "1")
+                if (strcmp(comm, "1") == 0) // Use strcmp for C-style string comparison
                 {
                     while (true)
                     {
                         std::cout << "Enter a points target for the game: ";
-                        std::string targetUpdateLine;
-                        std::getline(std::cin, targetUpdateLine);
-
-                        if (isDigit(targetUpdateLine))
+                        char targetUpdateLine[MAX_STR_LEN];              
+                        std::cin.getline(targetUpdateLine, MAX_STR_LEN);              
+                            if (isDigit(targetUpdateLine)) 
                         {
-                            requiredPointsToWin = std::stoi(targetUpdateLine);
+                            requiredPointsToWin = std::atoi(targetUpdateLine); 
                             std::cout << "Points target changed to " << requiredPointsToWin << "." << std::endl;
                             break;
                         }
@@ -182,18 +202,18 @@ int main()
 
                     wereSettingsModified = true;
                 }
-                else if (comm == "2")
+                else if (strcmp(comm, "2") == 0) 
                 {
-                    std::string line;
+                    char line[MAX_STR_LEN];
 
                     while (true) // Non-trump marriage
                     {
                         std::cout << "Enter points for the non-trump marriage: ";
-                        std::getline(std::cin, line);
+                        std::cin.getline(line, MAX_STR_LEN); 
 
                         if (isDigit(line))
                         {
-                            nonTrumpMarriage = std::stoi(line);
+                            nonTrumpMarriage = std::atoi(line); 
                             break;
                         }
                         else
@@ -205,11 +225,11 @@ int main()
                     while (true) // Trump marriage
                     {
                         std::cout << "Enter points for the trump marriage: ";
-                        std::getline(std::cin, line);
+                        std::cin.getline(line, MAX_STR_LEN); 
 
                         if (isDigit(line))
                         {
-                            trumpMarriage = std::stoi(line);
+                            trumpMarriage = std::atoi(line); 
                             break;
                         }
                         else
@@ -219,12 +239,13 @@ int main()
                     }
 
                     std::cout << "Marriage points now (non-trump/trump) [" << nonTrumpMarriage << "/" << trumpMarriage << "]" << std::endl;
+                    wereSettingsModified = true;
                 }
-                else if (comm == "3")
+                else if (strcmp(comm, "3") == 0) 
                 {
                     if (arePointsVisible)
                     {
-                        std::string prompt = "Do you want to stop seeing players' points?";
+                        const char *prompt = "Do you want to stop seeing players' points?"; 
                         if (getConfirmation(prompt))
                         {
                             arePointsVisible = false;
@@ -232,18 +253,19 @@ int main()
                     }
                     else
                     {
-                        std::string prompt = "Do you want to start seeing players' points?";
+                        const char *prompt = "Do you want to start seeing players' points?"; 
                         if (getConfirmation(prompt))
                         {
                             arePointsVisible = true;
                         }
                     }
+                    wereSettingsModified = true; 
                 }
-                else if (comm == "4")
+                else if (strcmp(comm, "4") == 0) 
                 {
                     if (lastTrickBonus)
                     {
-                        std::string prompt = "Do you want to stop the 10 bonus points for the last trick?";
+                        const char *prompt = "Do you want to stop the 10 bonus points for the last trick?"; 
                         if (getConfirmation(prompt))
                         {
                             lastTrickBonus = false;
@@ -251,14 +273,15 @@ int main()
                     }
                     else
                     {
-                        std::string prompt = "Do you want to have 10 bonus points for the last trick?";
+                        const char *prompt = "Do you want to have 10 bonus points for the last trick?"; 
                         if (getConfirmation(prompt))
                         {
                             lastTrickBonus = true;
                         }
                     }
+                    wereSettingsModified = true; 
                 }
-                else if (comm == "back")
+                else if (strcmp(comm, "back") == 0) // Use strcmp
                 {
                     std::cout << "Settings applied!" << std::endl;
 
@@ -272,93 +295,117 @@ int main()
 
                     break;
                 }
-
-                std::cout << "Invalid command. Please try again." << std::endl;
+                else // Only print error if it's not a recognized command
+                {
+                    std::cout << "Invalid command. Please try again." << std::endl;
+                }
             }
         }
         else if (strcmp(firstCommWord, "hand") == 0)
         {
-            std::vector<std::string> currentHand;
+            std::cout << "Your hand (P" << currentPlayerId << "): ";
 
             if (currentPlayerId == 1)
             {
-                currentHand = P1Hand;
+                printPlayerHand(P1Hand, P1HandSize);
+                std::cout << std::endl;
             }
             else
             {
-                currentHand = P2Hand;
+                printPlayerHand(P2Hand, P2HandSize);
+                std::cout << std::endl;
             }
-
-            std::cout << "Your hand (P" << currentPlayerId << "): " << playerHand(currentHand) << std::endl;
         }
         else if (strcmp(firstCommWord, "play") == 0)
         {
-            std::string input;
+            char input[MAX_STR_LEN]; // Changed from std::string to char array
 
             while (true)
             {
-                std::getline(std::cin, input);
-                if (isDigit(input) && std::stoi(input) >= 0 && std::stoi(input) <= 5)
-                    break;
-                std::cout << "Invalid hand index. Enter a number from 0 to 5: ";
+                std::cout << "Enter card index to play: ";
+                std::cin.getline(input, MAX_STR_LEN); 
+
+                
+                if (isDigit(input)) 
+                {
+                    int idx = std::atoi(input);
+                    if ((currentPlayerId == 1 && idx >= 0 && idx < P1HandSize) ||
+                        (currentPlayerId == 2 && idx >= 0 && idx < P2HandSize))
+                        break;
+                }
+                std::cout << "Invalid hand index. Enter a number from 0 to " << (HAND_MAX_SIZE - 1) << ": ";
             }
 
-            int index = std::stoi(input);
+            int index = std::atoi(input); // Use atoi
 
             if (currentPlayerId == 1)
             {
-                thrownCards.push_back(P1Hand.at(index));
-                std::cout << "P1 played " << P1Hand.at(index) << std::endl;
-                P1Hand.erase(P1Hand.begin() + index); // Removing the played card from the hand
+                thrownCards[thrownCount++] = P1Hand[index];
+                std::cout << "P1 played ";
+                cardPrint(P1Hand[index]); 
+                std::cout << std::endl;
+                // remove the card from P1's hand
+                for (int k = index; k < P1HandSize - 1; ++k)
+                    P1Hand[k] = P1Hand[k + 1];
+                --P1HandSize;
             }
             else
             {
-                thrownCards.push_back(P2Hand.at(index));
-                std::cout << "P2 played " << P2Hand.at(index) << std::endl;
-                P2Hand.erase(P2Hand.begin() + index); // Removing the played card from the hand
+                thrownCards[thrownCount++] = P2Hand[index];
+                std::cout << "P2 played ";
+                cardPrint(P2Hand[index]); 
+                std::cout << std::endl;
+                // remove the card from P2's hand
+                for (int k = index; k < P2HandSize - 1; ++k)
+                    P2Hand[k] = P2Hand[k + 1];
+                --P2HandSize;
             }
 
             // If a player puts the first hand on the "table":
-            if (thrownCards.size() == 1)
+            if (thrownCount == 1)
             {
                 firstPlayedPlayerId = currentPlayerId;
             }
-            else if (thrownCards.size() == 2) // If both players have played a card on the "table"
+            else if (thrownCount == 2) // If both players have played a card on the "table"
             {
                 bool P1WinsTrick;
+                Card firstCard = thrownCards[0];
+                Card secondCard = thrownCards[1];
 
-                if (isTrump(thrownCards.front(), trumpSuit) && !isTrump(thrownCards.back(), trumpSuit))
+                if (isTrump(firstCard, trumpSuit) && !isTrump(secondCard, trumpSuit))
                 {                                             // only first card is a trump
                     P1WinsTrick = (firstPlayedPlayerId == 1); // when first player plays first, he gives a trump
                 }
-                else if (!isTrump(thrownCards.back(), trumpSuit) && isTrump(thrownCards.front(), trumpSuit))
+                else if (!isTrump(secondCard, trumpSuit) && isTrump(firstCard, trumpSuit))
                 {                                             // only second card is a trump
                     P1WinsTrick = (firstPlayedPlayerId == 1); // when second player played first, then first player played trump
                 }
-                else if (isTrump(thrownCards.back(), trumpSuit) && isTrump(thrownCards.front(), trumpSuit))
-                {                                                                        // Both cards are trump
-                    P1WinsTrick = compareCards(thrownCards.front(), thrownCards.back()); // Stronger card wins
+                else if (isTrump(secondCard, trumpSuit) && isTrump(firstCard, trumpSuit))
+                {                                                      // Both cards are trump
+                    P1WinsTrick = compareCards(firstCard, secondCard); // Stronger card wins
                 }
                 else
                 { // Both cards are non-trump
-                    std::string dominantSuit = getSuit(firstPlayedPlayerId == 1 ? thrownCards.front() : thrownCards.back());
+                    // Changed to const char* and strcmp
+                    const char* dominantSuit = getSuit(firstPlayedPlayerId == 1 ? firstCard : secondCard);
                     // Dominant suit is the first played card's suit
 
-                    if (getSuit(thrownCards.back()) != dominantSuit)
+                    // Changed to strcmp for comparison
+                    if (std::strcmp(getSuit(secondCard), dominantSuit) != 0)
                     { // If second card's suit doesn't match the first one
                         P1WinsTrick = (firstPlayedPlayerId == 1);
                         // If P1 played first, he wins the trick
                     }
                     else
                     {
-                        P1WinsTrick = compareCards(thrownCards.front(), thrownCards.back()); // Stronger card wins
+                        P1WinsTrick = compareCards(firstCard, secondCard); // Stronger card wins
                     }
                 }
 
                 // CLOSED CHECK NEEDS TO BE ADDED!
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
 
-                thrownCards.clear();
+                thrownCount = 0;
             }
 
             currentPlayerId = 3 - currentPlayerId; // Looping the current player's turn

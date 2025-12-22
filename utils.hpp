@@ -5,10 +5,11 @@
 
 #include "cardStruct.hpp"
 
+constexpr size_t MAX_STR_LEN = 1024;
+
 void setupConsole();
 
 void setColor(int color);
 
-bool isDigit(const std::string &str);
-// replaced char-based isTrump with string-based version
-bool getConfirmation(const std::string &prompt);
+bool isDigit(const char *str);
+bool getConfirmation(const char *prompt);
