@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <random>
 #include <windows.h>
-#include <string>
+#include <cctype>
 
 #include "utils.hpp"
 #include "gameFunctions.hpp"
@@ -29,6 +29,8 @@ constexpr int DEFAULT_NON_TRUMP_MARRIAGE = 20;
 constexpr int DEFAULT_TRUMP_MARRIAGE = 40;
 constexpr bool DEFAULT_ARE_POINTS_VISIBLE = true;
 constexpr bool DEFAULT_LAST_TRICK_BONUS = true;
+
+constexpr size_t MAX_STR_LEN = 1024;
 
 constexpr int SUIT_MAX_LENGTH = 4;  //UTF-8 (3 bytes) + "\0"
 constexpr int RANK_MAX_LENGTH = 3;  //"10" + "\0" at most
@@ -83,17 +85,21 @@ int main()
 
         std::cout << ">";
 
-        std::string fullComm;
-        std::getline(std::cin, fullComm);
+        char fullComm[MAX_STR_LEN];
+        std::cin >> fullComm;
 
-        // Useful for two-word commands later:
-        std::string firstCommWord = fullComm.substr(0, fullComm.find_first_of(' '));
+        // Useful for two-word commands later
+        char firstCommWord[MAX_STR_LEN];
+        size_t spacePos = strcspn(fullComm, " ");
+        strncpy(firstCommWord, fullComm, spacePos);
+        firstCommWord[spacePos] = '\0';
 
-        // A simple line of code to convert the command to lowerCase:
-        std::transform(firstCommWord.begin(), firstCommWord.end(), firstCommWord.begin(), [](unsigned char c)
-                       { return std::tolower(c); });
+        // lower case
+        for (int i = 0; i < spacePos; i++) {
+            firstCommWord[i] = std::tolower(firstCommWord[i]);
+        }
 
-        if (firstCommWord == "start")
+        if (strcmp(firstCommWord, "start") == 0)
         {
 
             // In order to not reset the game on mistake:
@@ -129,12 +135,12 @@ int main()
             dealCards(deck, P1Hand, P2Hand);
             revealTrump(deck, trumpSuit); // Top card goes under and becomes a trump
         }
-        else if (firstCommWord == "rules")
+        else if (strcmp(firstCommWord, "rules") == 0)
         {
             std::string ruleset = generateRulesString(requiredPointsToWin, nonTrumpMarriage, trumpMarriage);
             std::cout << ruleset << std::endl;
         }
-        else if (firstCommWord == "settings")
+        else if (strcmp(firstCommWord, "settings") == 0)
         {
             while (true)
             {
@@ -269,7 +275,7 @@ int main()
                 std::cout << "Invalid command. Please try again." << std::endl;
             }
         }
-        else if (firstCommWord == "hand")
+        else if (strcmp(firstCommWord, "hand") == 0)
         {
             std::vector<std::string> currentHand;
 
@@ -284,7 +290,7 @@ int main()
 
             std::cout << "Your hand (P" << currentPlayerId << "): " << playerHand(currentHand) << std::endl;
         }
-        else if (firstCommWord == "play")
+        else if (strcmp(firstCommWord, "play") == 0)
         {
             std::string input;
 
@@ -356,40 +362,40 @@ int main()
 
             currentPlayerId = 3 - currentPlayerId; // Looping the current player's turn
         }
-        else if (firstCommWord == "switch-nine")
+        else if (strcmp(firstCommWord, "switch-nine") == 0)
         {
         }
-        else if (firstCommWord == "marriage")
+        else if (strcmp(firstCommWord, "marriage") == 0)
         {
         }
-        else if (firstCommWord == "close")
+        else if (strcmp(firstCommWord, "close") == 0)
         {
         }
-        else if (firstCommWord == "last-trick")
+        else if (strcmp(firstCommWord, "last-trick") == 0)
         {
         }
-        else if (firstCommWord == "trump")
+        else if (strcmp(firstCommWord, "trump") == 0)
         {
         }
-        else if (firstCommWord == "history")
+        else if (strcmp(firstCommWord, "history") == 0)
         {
         }
-        else if (firstCommWord == "status")
+        else if (strcmp(firstCommWord, "status") == 0)
         {
         }
-        else if (firstCommWord == "stop")
+        else if (strcmp(firstCommWord, "stop") == 0)
         {
         }
-        else if (firstCommWord == "surrender")
+        else if (strcmp(firstCommWord, "surrender") == 0)
         {
         }
-        else if (firstCommWord == "surrender-forever")
+        else if (strcmp(firstCommWord, "surrender-forever") == 0)
         {
         }
-        else if (firstCommWord == "save")
+        else if (strcmp(firstCommWord, "save") == 0)
         {
         }
-        else if (firstCommWord == "load")
+        else if (strcmp(firstCommWord, "load") == 0)
         {
         }
         else
