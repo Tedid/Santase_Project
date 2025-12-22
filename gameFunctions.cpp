@@ -1,8 +1,8 @@
 #include "gameFunctions.hpp"
 
-const std::string COLOR_RED = "\033[31m";
-const std::string COLOR_BLACK = "\033[30m";
-const std::string COLOR_RESET = "\033[0m";
+const char* COLOR_RED = "\033[31m";
+const char* COLOR_BLACK = "\033[30m";
+const char* COLOR_RESET = "\033[0m";
 
 const std::string HEARTS = COLOR_RED + "♥" + COLOR_RESET;
 const std::string DIAMONDS = COLOR_RED + "♦" + COLOR_RESET;
@@ -204,3 +204,8 @@ std::string playerHand(const std::vector<std::string> &hand)
 
     return str;
 }
+
+void cardPrint(const Card &card){
+    const char* colorCode = (card.suitValue == 3 || card.suitValue == 2) ? COLOR_RED : COLOR_BLACK;
+}
+

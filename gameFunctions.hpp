@@ -19,3 +19,6 @@ bool compareCards(const std::string &card1, const std::string &card2);
 std::string generateRulesString(const int requiredPointsToWin, const int nonTrumpMarriage, const int trumpMarriage);
 std::string getSuit(std::string card);
 std::string playerHand(const std::vector<std::string> &hand);
+
+void cardPrint(const Card &card);
+
