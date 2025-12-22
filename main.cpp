@@ -23,6 +23,7 @@
 
 #include "utils.hpp"
 #include "gameFunctions.hpp"
+#include "cardStruct.hpp"
 
 constexpr int DEFAULT_REQUIRED_POINTS_TO_WIN = 11;
 constexpr int DEFAULT_NON_TRUMP_MARRIAGE = 20;

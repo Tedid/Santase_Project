@@ -3,6 +3,8 @@
 #include <iostream>
 #include <windows.h>
 
+#include "cardStruct.hpp"
+
 void setupConsole();
 
 void setColor(int color);
