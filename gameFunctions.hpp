@@ -13,8 +13,8 @@ constexpr int DECK_SIZE = 24;
 constexpr int HAND_SIZE = 6;
 
 bool isTrump(const Card &card, const char *trumpSuit);
-void initializeDeck(Card deck[DECK_SIZE]);
-void dealCards(Card deck[DECK_SIZE], Card P1Hand[HAND_SIZE], Card P2Hand[HAND_SIZE]);
+void initializeDeck(Card deck[DECK_SIZE], int &deckSize);
+void dealCards(Card deck[DECK_SIZE], Card P1Hand[], Card P2Hand[],int &deckSize);
 void revealTrump(Card deck[DECK_SIZE], char *trumpSuit);
 int getSuitValue(const Card &card);
 int getRankValue(const Card &card);

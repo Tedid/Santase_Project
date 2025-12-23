@@ -29,7 +29,7 @@ bool isTrump(const Card &card, const char *trumpSuit)
     return std::strcmp(card.suit, trumpSuit) == 0;
 }
 
-void initializeDeck(Card deck[DECK_SIZE])
+void initializeDeck(Card deck[DECK_SIZE], int &deckSize)
 {
 
     const char *suits[] = {"♣", "♦", "♥", "♠"};
@@ -51,6 +51,8 @@ void initializeDeck(Card deck[DECK_SIZE])
         }
     }
 
+    deckSize = DECK_SIZE;
+
     // SHUFFLING DECK
     std::shuffle(deck, deck + DECK_SIZE, std::mt19937{std::random_device{}()});
 
@@ -62,9 +64,9 @@ void initializeDeck(Card deck[DECK_SIZE])
     // }
 }
 
-void dealCards(Card deck[DECK_SIZE], Card P1[], Card P2[])
+void dealCards(Card deck[DECK_SIZE], Card P1[], Card P2[], int &deckSize)
 {
-    int deckSize = DECK_SIZE;
+    deckSize = DECK_SIZE;
     int p1Idx = 0, p2Idx = 0;
 
     for (int j = 0; j < 2; ++j)

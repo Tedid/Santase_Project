@@ -32,7 +32,7 @@ constexpr int DEFAULT_TRUMP_MARRIAGE = 40;
 constexpr bool DEFAULT_ARE_POINTS_VISIBLE = true;
 constexpr bool DEFAULT_LAST_TRICK_BONUS = true;
 
-constexpr size_t MAX_STR_LEN = 1024;
+// constexpr size_t MAX_STR_LEN = 1024;
 
 constexpr int DECK_MAX_SIZE = 24;
 constexpr int HAND_MAX_SIZE = 6;
@@ -46,7 +46,7 @@ int main()
     bool wereSettingsModified = false;
     char trumpSuit[SUIT_MAX_LENGTH]; // is one of ("♣","♠","♥","♦")
     Card deck[DECK_MAX_SIZE];
-    size_t deckSize = 0;
+    int deckSize = 0;
 
     Card P1Hand[HAND_MAX_SIZE], P2Hand[HAND_MAX_SIZE];
     int P1HandSize = 0, P2HandSize = 0;
@@ -150,8 +150,8 @@ int main()
             P1RoundPoints = 0, P2RoundPoints = 0;
             hasGameStarted = true;
 
-            initializeDeck(deck); // Shuffling deck
-            dealCards(deck, P1Hand, P2Hand);
+            initializeDeck(deck, deckSize); // Shuffling deck
+            dealCards(deck, P1Hand, P2Hand, deckSize);
             P1HandSize = HAND_MAX_SIZE;
             P2HandSize = HAND_MAX_SIZE;
             revealTrump(deck, trumpSuit); // Top card goes under and becomes a trump
