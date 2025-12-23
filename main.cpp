@@ -108,11 +108,15 @@ int main()
         std::cout << ">";
 
         char fullComm[MAX_STR_LEN];
-        std::cin >> fullComm;
+        std::cin.getline(fullComm, MAX_STR_LEN); // Read the entire line
 
         // Useful for two-word commands later
         char firstCommWord[MAX_STR_LEN];
-        size_t spacePos = strcspn(fullComm, " ");
+        // Find the first space or end of string
+        size_t spacePos = 0;
+        while (fullComm[spacePos] != '\0' && fullComm[spacePos] != ' ') {
+            spacePos++;
+        }
         strncpy(firstCommWord, fullComm, spacePos);
         firstCommWord[spacePos] = '\0';
 
@@ -185,7 +189,7 @@ int main()
                     comm[i] = std::tolower(comm[i]);
                 }
 
-                if (strcmp(comm, "1") == 0) // Use strcmp for C-style string comparison
+                if (strcmp(comm, "1") == 0) 
                 {
                     while (true)
                     {
@@ -285,7 +289,7 @@ int main()
                     }
                     wereSettingsModified = true; 
                 }
-                else if (strcmp(comm, "back") == 0) // Use strcmp
+                else if (strcmp(comm, "back") == 0) 
                 {
                     std::cout << "Settings applied!" << std::endl;
 
@@ -299,7 +303,7 @@ int main()
 
                     break;
                 }
-                else // Only print error if it's not a recognized command
+                else 
                 {
                     std::cout << "Invalid command. Please try again." << std::endl;
                 }
@@ -322,25 +326,31 @@ int main()
         }
         else if (strcmp(firstCommWord, "play") == 0)
         {
-            char input[MAX_STR_LEN]; // Changed from std::string to char array
+            //char input[MAX_STR_LEN]; // Changed from std::string to char array
 
-            while (true)
-            {
-                std::cout << "Enter card index to play: ";
-                std::cin.getline(input, MAX_STR_LEN); 
+            const char playNumChar = fullComm[spacePos];
+            if(!isdigit(playNumChar)){
+                std::cout << "Invalid card index" << std::endl;
+                continue;
+            }
+            int index = playNumChar - '0';
+
+            // while (true)
+            // {
+            //     std::cout << "Enter card index to play: ";
+            //     std::cin.getline(input, MAX_STR_LEN); 
 
                 
-                if (isDigit(input)) 
-                {
-                    int idx = std::atoi(input);
-                    if ((currentPlayerId == 1 && idx >= 0 && idx < P1HandSize) ||
-                        (currentPlayerId == 2 && idx >= 0 && idx < P2HandSize))
-                        break;
-                }
-                std::cout << "Invalid hand index. Enter a number from 0 to " << (HAND_MAX_SIZE - 1) << ": ";
-            }
+            //     if (isDigit(input)) 
+            //     {
+            //         int idx = std::atoi(input);
+            //         if ((currentPlayerId == 1 && idx >= 0 && idx < P1HandSize) ||
+            //             (currentPlayerId == 2 && idx >= 0 && idx < P2HandSize))
+            //             break;
+            //     }
+            //     std::cout << "Invalid hand index. Enter a number from 0 to " << (HAND_MAX_SIZE - 1) << ": ";
+            // }
 
-            int index = std::atoi(input); // Use atoi
 
             if (currentPlayerId == 1)
             {

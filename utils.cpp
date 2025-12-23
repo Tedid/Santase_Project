@@ -27,33 +27,27 @@ bool isDigit(const char *str)
 
 bool getConfirmation(const char *prompt)
 {
-    std::cout << prompt << " [y/n]: " << std::endl;
-    char *answer;
+    std::cout << prompt << " [y/n]: ";
+    char answerChar;
 
     while (true)
     {
-        std::cin >> answer;
+        std::cin >> answerChar; // Read a single character
 
-        int answerLen = 0;
-        char *pointer = answer;
-        while(*pointer != '\0'){
-            answerLen++;
-        }
-        if (answerLen == 1)
+        // Directly discard characters until newline or EOF
+        while (std::cin.get() != '\n');
+
+        char c = std::tolower(answerChar);
+
+        if (c == 'n')
         {
-            char c = std::tolower(answer[0]);
-
-            if (c == 'n')
-            {
-                return false;
-            }
-            else if (c == 'y')
-            {
-                return true;
-            }
+            return false;
         }
-
+        else if (c == 'y')
+        {
+            return true;
+        }
         // In case answer is invalid:
-        std::cout << "Invalid answer, please try again. [y/n]: " << std::endl;
+        std::cout << "Invalid answer, please try again. [y/n]: ";
     }
 }
