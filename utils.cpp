@@ -7,7 +7,13 @@ void setupConsole()
 #endif
 }
 
-bool isDigit(const char *str) {
+void setColor(int color)
+{
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+bool isDigit(const char *str)
+{
     if (!str) return false;
     const char *pointer = str;
     while (*pointer != '\0') { 

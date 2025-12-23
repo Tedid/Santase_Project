@@ -94,9 +94,13 @@ int main()
                 std::cout << std::endl;
             }
 
-            std::cout << "Trump suit: " << trumpSuit << std::endl;
+            std::cout << "Trump suit: ";
+            printSuitColored(trumpSuit);
+            std::cout << std::endl;
             if (deckSize > 0)
-                std::cout << "Bottom card: " << deck[0].rank << getSuit(deck[0]) << std::endl;
+                std::cout << "Bottom card: ";
+            cardPrint(deck[0]);
+           std::cout << std::endl;
             std::cout << "Cards left in deck: " << deckSize << std::endl;
             std::cout << std::endl;
         }

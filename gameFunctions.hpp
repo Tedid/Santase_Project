@@ -9,6 +9,11 @@
 
 #include "cardStruct.hpp"
 
+const char *COLOR_RED = "\033[31m";
+const char *COLOR_BLACK = "\033[30m";
+const char *COLOR_RESET = "\033[0m";
+
+
 constexpr int DECK_SIZE = 24;
 constexpr int HAND_SIZE = 6;
 
@@ -22,6 +27,7 @@ bool compareCards(const Card &card1, const Card &card2);
 
 void printRulesString(const int requiredPointsToWin, const int nonTrumpMarriage, const int trumpMarriage);
 const char *getSuit(const Card &card);
+void printSuitColored(const char *suit);
 void cardPrint(const Card &card);
 void printPlayerHand(const Card hand[HAND_SIZE], size_t size);
 
