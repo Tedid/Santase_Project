@@ -4,7 +4,6 @@ const char *COLOR_RED = "\033[31m";
 const char *COLOR_BLACK = "\033[30m";
 const char *COLOR_RESET = "\033[0m";
 
-
 const char *HEARTS = "♥";
 const char *DIAMONDS = "♦";
 const char *CLUBS = "♣";
@@ -183,18 +182,32 @@ const char *getSuit(const Card &card)
     return card.suit;
 }
 
-void printSuitColored(const char *suit)
+/*
+-1 = empty deck
+ 0 = deal completed
+*/
+int dealCard(Card deck[DECK_SIZE], Card PHand[], int &deckSize, int &handSize)
 {
     const char *colorCode = (std::strcmp(suit, "♥") == 0 || std::strcmp(suit, "♦") == 0) ? COLOR_RED : COLOR_BLACK;
     std::cout << colorCode  << suit << COLOR_RESET;
 
+    PHand[handSize] = deck[deckSize - 1];
+    handSize++;
+    deckSize--;
+
+    return 0;
 }
 
+void printSuitColored(const char *suit)
+{
+    const char *colorCode = (std::strcmp(suit, "♥") == 0 || std::strcmp(suit, "♦") == 0) ? COLOR_RED : COLOR_BLACK;
+    std::cout << colorCode << suit << COLOR_RESET;
+}
 
 void cardPrint(const Card &card)
 {
     const char *colorCode = (card.suitValue == 3 || card.suitValue == 2) ? COLOR_RED : COLOR_BLACK;
-    std::cout << card.rank << colorCode  << getSuit(card) << COLOR_RESET;
+    std::cout << card.rank << colorCode << getSuit(card) << COLOR_RESET;
 }
 
 void printPlayerHand(const Card hand[HAND_SIZE], size_t size)
