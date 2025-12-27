@@ -327,8 +327,11 @@ int main()
         }
         else if (strcmp(firstCommWord, "play") == 0)
         {
-            const char playNumChar = fullComm[spacePos];
-            if(!isdigit(playNumChar)){
+            const char playNumChar = fullComm[spacePos + 1];
+            int index = playNumChar - '0';
+
+            if (!isdigit(playNumChar) || index > 5 || index < 0)
+            {
                 std::cout << "Invalid card index" << std::endl;
                 continue;
             }
