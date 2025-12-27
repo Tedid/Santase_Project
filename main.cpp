@@ -100,7 +100,7 @@ int main()
             if (deckSize > 0)
                 std::cout << "Bottom card: ";
             cardPrint(deck[0]);
-           std::cout << std::endl;
+            std::cout << std::endl;
             std::cout << "Cards left in deck: " << deckSize << std::endl;
             std::cout << std::endl;
         }
@@ -114,7 +114,8 @@ int main()
         char firstCommWord[MAX_STR_LEN];
         // Find the first space or end of string
         size_t spacePos = 0;
-        while (fullComm[spacePos] != '\0' && fullComm[spacePos] != ' ') {
+        while (fullComm[spacePos] != '\0' && fullComm[spacePos] != ' ')
+        {
             spacePos++;
         }
         strncpy(firstCommWord, fullComm, spacePos);
@@ -180,8 +181,8 @@ int main()
                 std::cout << "4) Last trick +10 [" << (lastTrickBonus ? "on" : "off") << "]" << std::endl;
                 std::cout << "Enter number to change or 'back' to apply and return: ";
 
-                char comm[MAX_STR_LEN];              
-                std::cin.getline(comm, MAX_STR_LEN); 
+                char comm[MAX_STR_LEN];
+                std::cin.getline(comm, MAX_STR_LEN);
 
                 // Transforming comm toLower
                 for (size_t i = 0; comm[i] != '\0'; ++i)
@@ -189,16 +190,16 @@ int main()
                     comm[i] = std::tolower(comm[i]);
                 }
 
-                if (strcmp(comm, "1") == 0) 
+                if (strcmp(comm, "1") == 0)
                 {
                     while (true)
                     {
                         std::cout << "Enter a points target for the game: ";
-                        char targetUpdateLine[MAX_STR_LEN];              
-                        std::cin.getline(targetUpdateLine, MAX_STR_LEN);              
-                            if (isDigit(targetUpdateLine)) 
+                        char targetUpdateLine[MAX_STR_LEN];
+                        std::cin.getline(targetUpdateLine, MAX_STR_LEN);
+                        if (isDigit(targetUpdateLine))
                         {
-                            requiredPointsToWin = std::atoi(targetUpdateLine); 
+                            requiredPointsToWin = std::atoi(targetUpdateLine);
                             std::cout << "Points target changed to " << requiredPointsToWin << "." << std::endl;
                             break;
                         }
@@ -210,18 +211,18 @@ int main()
 
                     wereSettingsModified = true;
                 }
-                else if (strcmp(comm, "2") == 0) 
+                else if (strcmp(comm, "2") == 0)
                 {
                     char line[MAX_STR_LEN];
 
                     while (true) // Non-trump marriage
                     {
                         std::cout << "Enter points for the non-trump marriage: ";
-                        std::cin.getline(line, MAX_STR_LEN); 
+                        std::cin.getline(line, MAX_STR_LEN);
 
                         if (isDigit(line))
                         {
-                            nonTrumpMarriage = std::atoi(line); 
+                            nonTrumpMarriage = std::atoi(line);
                             break;
                         }
                         else
@@ -233,11 +234,11 @@ int main()
                     while (true) // Trump marriage
                     {
                         std::cout << "Enter points for the trump marriage: ";
-                        std::cin.getline(line, MAX_STR_LEN); 
+                        std::cin.getline(line, MAX_STR_LEN);
 
                         if (isDigit(line))
                         {
-                            trumpMarriage = std::atoi(line); 
+                            trumpMarriage = std::atoi(line);
                             break;
                         }
                         else
@@ -249,11 +250,11 @@ int main()
                     std::cout << "Marriage points now (non-trump/trump) [" << nonTrumpMarriage << "/" << trumpMarriage << "]" << std::endl;
                     wereSettingsModified = true;
                 }
-                else if (strcmp(comm, "3") == 0) 
+                else if (strcmp(comm, "3") == 0)
                 {
                     if (arePointsVisible)
                     {
-                        const char *prompt = "Do you want to stop seeing players' points?"; 
+                        const char *prompt = "Do you want to stop seeing players' points?";
                         if (getConfirmation(prompt))
                         {
                             arePointsVisible = false;
@@ -261,19 +262,19 @@ int main()
                     }
                     else
                     {
-                        const char *prompt = "Do you want to start seeing players' points?"; 
+                        const char *prompt = "Do you want to start seeing players' points?";
                         if (getConfirmation(prompt))
                         {
                             arePointsVisible = true;
                         }
                     }
-                    wereSettingsModified = true; 
+                    wereSettingsModified = true;
                 }
-                else if (strcmp(comm, "4") == 0) 
+                else if (strcmp(comm, "4") == 0)
                 {
                     if (lastTrickBonus)
                     {
-                        const char *prompt = "Do you want to stop the 10 bonus points for the last trick?"; 
+                        const char *prompt = "Do you want to stop the 10 bonus points for the last trick?";
                         if (getConfirmation(prompt))
                         {
                             lastTrickBonus = false;
@@ -281,15 +282,15 @@ int main()
                     }
                     else
                     {
-                        const char *prompt = "Do you want to have 10 bonus points for the last trick?"; 
+                        const char *prompt = "Do you want to have 10 bonus points for the last trick?";
                         if (getConfirmation(prompt))
                         {
                             lastTrickBonus = true;
                         }
                     }
-                    wereSettingsModified = true; 
+                    wereSettingsModified = true;
                 }
-                else if (strcmp(comm, "back") == 0) 
+                else if (strcmp(comm, "back") == 0)
                 {
                     std::cout << "Settings applied!" << std::endl;
 
@@ -303,7 +304,7 @@ int main()
 
                     break;
                 }
-                else 
+                else
                 {
                     std::cout << "Invalid command. Please try again." << std::endl;
                 }
@@ -331,14 +332,12 @@ int main()
                 std::cout << "Invalid card index" << std::endl;
                 continue;
             }
-            int index = playNumChar - '0';
-
 
             if (currentPlayerId == 1)
             {
                 thrownCards[thrownCount++] = P1Hand[index];
                 std::cout << "P1 played ";
-                cardPrint(P1Hand[index]); 
+                cardPrint(P1Hand[index]);
                 std::cout << std::endl;
                 // remove the card from P1's hand
                 for (int k = index; k < P1HandSize - 1; ++k)
@@ -349,7 +348,7 @@ int main()
             {
                 thrownCards[thrownCount++] = P2Hand[index];
                 std::cout << "P2 played ";
-                cardPrint(P2Hand[index]); 
+                cardPrint(P2Hand[index]);
                 std::cout << std::endl;
                 // remove the card from P2's hand
                 for (int k = index; k < P2HandSize - 1; ++k)
@@ -383,10 +382,9 @@ int main()
                 else
                 { // Both cards are non-trump
                     // Changed to const char* and strcmp
-                    const char* dominantSuit = getSuit(firstPlayedPlayerId == 1 ? firstCard : secondCard);
+                    const char *dominantSuit = getSuit(firstPlayedPlayerId == 1 ? firstCard : secondCard);
                     // Dominant suit is the first played card's suit
 
-                    // Changed to strcmp for comparison
                     if (std::strcmp(getSuit(secondCard), dominantSuit) != 0)
                     { // If second card's suit doesn't match the first one
                         P1WinsTrick = (firstPlayedPlayerId == 1);
