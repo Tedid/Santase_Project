@@ -188,8 +188,10 @@ const char *getSuit(const Card &card)
 */
 int dealCard(Card deck[DECK_SIZE], Card PHand[], int &deckSize, int &handSize)
 {
-    const char *colorCode = (std::strcmp(suit, "♥") == 0 || std::strcmp(suit, "♦") == 0) ? COLOR_RED : COLOR_BLACK;
-    std::cout << colorCode  << suit << COLOR_RESET;
+    if (deckSize <= 0)
+    {
+        return -1;
+    }
 
     PHand[handSize] = deck[deckSize - 1];
     handSize++;
