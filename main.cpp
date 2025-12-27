@@ -160,7 +160,7 @@ int main()
             hasGameStarted = true;
 
             initializeDeck(deck, deckSize); // Shuffling deck
-            dealCards(deck, P1Hand, P2Hand, deckSize);
+            distributeCards(deck, P1Hand, P2Hand, deckSize);
             P1HandSize = HAND_MAX_SIZE;
             P2HandSize = HAND_MAX_SIZE;
             revealTrump(deck, trumpSuit); // Top card goes under and becomes a trump
@@ -403,6 +403,9 @@ int main()
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
 
                 thrownCount = 0;
+
+
+
             }
 
             currentPlayerId = 3 - currentPlayerId; // Looping the current player's turn

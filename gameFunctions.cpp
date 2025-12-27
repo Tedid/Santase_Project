@@ -65,7 +65,7 @@ void initializeDeck(Card deck[DECK_SIZE], int &deckSize)
     // }
 }
 
-void dealCards(Card deck[DECK_SIZE], Card P1[], Card P2[], int &deckSize)
+void distributeCards(Card deck[DECK_SIZE], Card P1[], Card P2[], int &deckSize)
 {
     deckSize = DECK_SIZE;
     int p1Idx = 0, p2Idx = 0;
