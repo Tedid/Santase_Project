@@ -9,10 +9,6 @@
 
 #include "cardStruct.hpp"
 
-const char *COLOR_RED = "\033[31m";
-const char *COLOR_BLACK = "\033[30m";
-const char *COLOR_RESET = "\033[0m";
-
 
 constexpr int DECK_SIZE = 24;
 constexpr int HAND_SIZE = 6;

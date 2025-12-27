@@ -1,5 +1,10 @@
 #include "gameFunctions.hpp"
 
+const char *COLOR_RED = "\033[31m";
+const char *COLOR_BLACK = "\033[30m";
+const char *COLOR_RESET = "\033[0m";
+
+
 const char *HEARTS = "♥";
 const char *DIAMONDS = "♦";
 const char *CLUBS = "♣";
