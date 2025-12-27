@@ -326,30 +326,12 @@ int main()
         }
         else if (strcmp(firstCommWord, "play") == 0)
         {
-            //char input[MAX_STR_LEN]; // Changed from std::string to char array
-
             const char playNumChar = fullComm[spacePos];
             if(!isdigit(playNumChar)){
                 std::cout << "Invalid card index" << std::endl;
                 continue;
             }
             int index = playNumChar - '0';
-
-            // while (true)
-            // {
-            //     std::cout << "Enter card index to play: ";
-            //     std::cin.getline(input, MAX_STR_LEN); 
-
-                
-            //     if (isDigit(input)) 
-            //     {
-            //         int idx = std::atoi(input);
-            //         if ((currentPlayerId == 1 && idx >= 0 && idx < P1HandSize) ||
-            //             (currentPlayerId == 2 && idx >= 0 && idx < P2HandSize))
-            //             break;
-            //     }
-            //     std::cout << "Invalid hand index. Enter a number from 0 to " << (HAND_MAX_SIZE - 1) << ": ";
-            // }
 
 
             if (currentPlayerId == 1)
