@@ -331,6 +331,8 @@ int main()
             const char playNumChar = fullComm[spacePos + 1];
             int index = playNumChar - '0';
 
+            int currentPlayerHandSize = (currentPlayerId == 1 ? P1HandSize : P2HandSize);
+
             if (!isdigit(playNumChar) || index > 5 || index < 0)
             {
                 std::cout << "Invalid card index" << std::endl;
@@ -382,11 +384,11 @@ int main()
 
                 if (isTrump(firstCard, trumpSuit) && !isTrump(secondCard, trumpSuit))
                 {                                             // only first card is a trump
-                    P1WinsTrick = (firstPlayedPlayerId == 1); // when first player plays first, he gives a trump
+                    P1WinsTrick = (firstPlayedPlayerId == 1); // when first player plays first, he gives the trump
                 }
-                else if (!isTrump(secondCard, trumpSuit) && isTrump(firstCard, trumpSuit))
+                else if (!isTrump(firstCard, trumpSuit) && isTrump(secondCard, trumpSuit))
                 {                                             // only second card is a trump
-                    P1WinsTrick = (firstPlayedPlayerId == 1); // when second player played first, then first player played trump
+                    P1WinsTrick = (firstPlayedPlayerId == 2); // when second player played first, then first player played trump
                 }
                 else if (isTrump(secondCard, trumpSuit) && isTrump(firstCard, trumpSuit))
                 {                                                      // Both cards are trump
