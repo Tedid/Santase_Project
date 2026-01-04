@@ -342,13 +342,100 @@ int main()
             // Current player "throws" a card
             if (currentPlayerId == 1)
             {
+                // Check if second thrown card is valid when round is closed
                 if (thrownCount == 1 && isRoundClosed)
                 {
                     Card thrownCard = thrownCards[0];
                     const char *thrownSuit = getSuit(thrownCard);
-                    bool handMathingThrownSuit[HAND_MAX_SIZE];
                     
-                }
+                    int validIndexes[P1HandSize];
+                    int countOfValidIndexes = 0;
+
+                    bool PlayerHasMatchingThrownSuit = false;
+                    bool handMathingThrownSuit[P1HandSize];
+
+                    for (int i = 0; i < P1HandSize; i++)
+                    {
+                        if (strcmp(thrownSuit, getSuit(P1Hand[i])) == 0)
+                        {
+                            handMathingThrownSuit[i] = true;
+                            PlayerHasMatchingThrownSuit = true;
+                        }
+                    }
+
+
+                    
+                        if (PlayerHasMatchingThrownSuit)
+                        {
+                            bool P1HasStrongerCard = false;
+                            for (int k = 0; k < P1HandSize; k++)
+                            {
+                                if (handMathingThrownSuit[k] && !compareCards(thrownCard, P1Hand[k])) // If a matching suit card is stronger
+                                {
+                                    validIndexes[countOfValidIndexes++] = k;
+                                    P1HasStrongerCard = true;
+                                }
+                            }
+
+                            if (!P1HasStrongerCard)
+                            {
+                                for (int k = 0; k < P1HandSize; k++)
+                                {
+                                    if (handMathingThrownSuit[k]) // All mathing suit cards are valid
+                                    {
+                                        validIndexes[countOfValidIndexes++] = k;
+                                    }
+                                }
+                            }
+                        }
+                        else // P1 has no mathing suit cards
+                        {
+                            bool P1HasTrumpCard = false;
+                            bool handTrumpCards[P1HandSize];
+
+                            for (int i = 0; i < P1HandSize; i++)
+                            {
+                                if (isTrump(P1Hand[i], trumpSuit))
+                                {
+                                    handTrumpCards[i] = true;
+                                    P1HasTrumpCard = true;
+                                }
+                            }
+
+                            if (P1HasTrumpCard)
+                            {
+                                //Only trump cards are valid
+                                for (int k = 0; k < P1HandSize; k++)
+                                {
+                                    if (handTrumpCards[k])
+                                    {
+                                        validIndexes[countOfValidIndexes++] = k;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // Everything is valid
+                                for (int k = 0; k < P1HandSize; k++)
+                                {
+                                    validIndexes[countOfValidIndexes++] = k;
+                                }
+                            }
+                        }
+
+                        bool isIndexValid = false;
+                        for (int i = 0; i < countOfValidIndexes; i++){
+                            if(validIndexes[i] == index){
+                                isIndexValid = true;
+                                break;
+                            }
+                        }
+
+                        if(!isIndexValid){
+                            std::cout << "You can't play this card!";
+                            continue;
+                        }
+                                }
                 thrownCards[thrownCount++] = P1Hand[index];
                 std::cout << "P1 played ";
                 cardPrint(P1Hand[index]);
@@ -410,7 +497,6 @@ int main()
                     }
                 }
 
-                // CLOSED CHECK NEEDS TO BE ADDED!
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
                 currentPlayerId = (P1WinsTrick ? 1 : 2); // Winner plays next
 
