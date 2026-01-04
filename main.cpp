@@ -38,6 +38,29 @@ constexpr bool DEFAULT_LAST_TRICK_BONUS = true;
 // constexpr int HAND_MAX_SIZE = 6;
 constexpr int THROWN_CARDS_MAX_NUMBER = 2;
 
+// Helper function to handle playing a card for a given player
+bool processPlayerCardPlay(Card playerHand[], int& playerHandSize, Card thrownCards[], int& thrownCount, const char trumpSuit[], int cardIndex, int playerId, bool isRoundClosed) {
+    // Check if second thrown card is valid when round is closed
+    if (thrownCount == 1 && isRoundClosed) {
+        if (!isValidPlayWhenClosed(playerHand, playerHandSize, thrownCards[0], trumpSuit, cardIndex)) {
+            std::cout << "You can't play this card!" << std::endl;
+            return false;
+        }
+    }
+
+    thrownCards[thrownCount++] = playerHand[cardIndex];
+    std::cout << "P" << playerId << " played ";
+    cardPrint(playerHand[cardIndex]);
+    std::cout << std::endl;
+
+    // Remove the card from the player's hand
+    for (int k = cardIndex; k < playerHandSize - 1; ++k) {
+        playerHand[k] = playerHand[k + 1];
+    }
+    --playerHandSize;
+    return true;
+}
+
 int main()
 {
     setupConsole(); // Ensures proper display of suit symbols (♣,♠,♥,♦)
@@ -331,52 +354,24 @@ int main()
             const char playNumChar = fullComm[spacePos + 1];
             int index = playNumChar - '0';
 
-            int currentPlayerHandSize = (currentPlayerId == 1 ? P1HandSize : P2HandSize);
-
             if (!isdigit(playNumChar) || index > 5 || index < 0)
             {
                 std::cout << "Invalid card index" << std::endl;
                 continue;
             }
 
-            // Current player "throws" a card
+            bool playSuccessful = false;
             if (currentPlayerId == 1)
             {
-                // Check if second thrown card is valid when round is closed
-                if (thrownCount == 1 && isRoundClosed)
-                {
-                    if (!isValidPlayWhenClosed(P1Hand, P1HandSize, thrownCards[0], trumpSuit, index)) {
-                        std::cout << "You can't play this card!" << std::endl;
-                        continue;
-                    }
-                }
-                thrownCards[thrownCount++] = P1Hand[index];
-                std::cout << "P1 played ";
-                cardPrint(P1Hand[index]);
-                std::cout << std::endl;
-                // remove the card from P1's hand
-                for (int k = index; k < P1HandSize - 1; ++k)
-                    P1Hand[k] = P1Hand[k + 1];
-                --P1HandSize;
+                playSuccessful = processPlayerCardPlay(P1Hand, P1HandSize, thrownCards, thrownCount, trumpSuit, index, 1, isRoundClosed);
             }
-            else
+            else // currentPlayerId == 2
             {
-                // Check if second thrown card is valid when round is closed
-                if (thrownCount == 1 && isRoundClosed)
-                {
-                    if (!isValidPlayWhenClosed(P2Hand, P2HandSize, thrownCards[0], trumpSuit, index)) {
-                        std::cout << "You can't play this card!" << std::endl;
-                        continue;
-                    }
-                }
-                thrownCards[thrownCount++] = P2Hand[index];
-                std::cout << "P2 played ";
-                cardPrint(P2Hand[index]);
-                std::cout << std::endl;
-                // remove the card from P2's hand
-                for (int k = index; k < P2HandSize - 1; ++k)
-                    P2Hand[k] = P2Hand[k + 1];
-                --P2HandSize;
+                playSuccessful = processPlayerCardPlay(P2Hand, P2HandSize, thrownCards, thrownCount, trumpSuit, index, 2, isRoundClosed);
+            }
+
+            if (!playSuccessful) {
+                continue; // Skip the rest of the play logic if the card wasn't played successfully
             }
 
             // If a player puts the first hand on the "table":
