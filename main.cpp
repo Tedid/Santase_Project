@@ -363,6 +363,7 @@ int main()
             if (thrownCount == 1)
             {
                 firstPlayedPlayerId = currentPlayerId;
+                currentPlayerId = 3 - currentPlayerId; // Switching the current player's turn
             }
             else if (thrownCount == 2) // If both players have played a card on the "table"
             {
@@ -401,14 +402,10 @@ int main()
 
                 // CLOSED CHECK NEEDS TO BE ADDED!
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
+                currentPlayerId = (P1WinsTrick ? 1 : 2);
 
                 thrownCount = 0;
-
-
-
             }
-
-            currentPlayerId = 3 - currentPlayerId; // Looping the current player's turn
         }
         else if (strcmp(firstCommWord, "switch-nine") == 0)
         {
