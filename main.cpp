@@ -396,7 +396,6 @@ int main()
                 }
                 else
                 { // Both cards are non-trump
-                    // Changed to const char* and strcmp
                     const char *dominantSuit = getSuit(firstPlayedPlayerId == 1 ? firstCard : secondCard);
                     // Dominant suit is the first played card's suit
 
