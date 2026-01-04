@@ -28,3 +28,4 @@ void printSuitColored(const char *suit);
 void cardPrint(const Card &card);
 void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size);
 
+bool isValidPlayWhenClosed(const Card *playerHand, int playerHandSize, const Card &opponentCard, const char *trumpSuit, int playedIndex);

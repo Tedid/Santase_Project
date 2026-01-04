@@ -225,3 +225,72 @@ void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size)
     }
     std::cout << " ]";
 }
+
+bool isValidPlayWhenClosed(const Card* playerHand, int playerHandSize, const Card& opponentCard, const char* trumpSuit, int playedIndex) {
+    const char *opponentSuit = getSuit(opponentCard);
+    
+    int validIndexes[HAND_MAX_SIZE]; // Use HAND_MAX_SIZE or a dynamically allocated array
+    int countOfValidIndexes = 0;
+
+    bool playerHasMatchingOpponentSuit = false;
+    bool handMatchingOpponentSuit[HAND_MAX_SIZE] = {false};
+
+    for (int i = 0; i < playerHandSize; i++) {
+        if (strcmp(opponentSuit, getSuit(playerHand[i])) == 0) {
+            handMatchingOpponentSuit[i] = true;
+            playerHasMatchingOpponentSuit = true;
+        }
+    }
+
+    if (playerHasMatchingOpponentSuit) {
+        bool playerHasStrongerCard = false;
+        for (int k = 0; k < playerHandSize; k++) {
+            if (handMatchingOpponentSuit[k] && !compareCards(opponentCard, playerHand[k])) { // If a matching suit card is stronger
+                validIndexes[countOfValidIndexes++] = k;
+                playerHasStrongerCard = true;
+            }
+        }
+
+        if (!playerHasStrongerCard) {
+            for (int k = 0; k < playerHandSize; k++) {
+                if (handMatchingOpponentSuit[k]) { // All matching suit cards are valid if no stronger matching suit card
+                    validIndexes[countOfValidIndexes++] = k;
+                }
+            }
+        }
+    } else { // Player has no matching suit cards
+        bool playerHasTrumpCard = false;
+        bool handTrumpCards[HAND_MAX_SIZE] = {false};
+
+        for (int i = 0; i < playerHandSize; i++) {
+            if (isTrump(playerHand[i], trumpSuit)) {
+                handTrumpCards[i] = true;
+                playerHasTrumpCard = true;
+            }
+        }
+
+        if (playerHasTrumpCard) {
+            // Only trump cards are valid
+            for (int k = 0; k < playerHandSize; k++) {
+                if (handTrumpCards[k]) {
+                    validIndexes[countOfValidIndexes++] = k;
+                }
+            }
+        } else {
+            // Everything is valid
+            for (int k = 0; k < playerHandSize; k++) {
+                validIndexes[countOfValidIndexes++] = k;
+            }
+        }
+    }
+
+    bool isIndexValid = false;
+    for (int i = 0; i < countOfValidIndexes; i++) {
+        if (validIndexes[i] == playedIndex) {
+            isIndexValid = true;
+            break;
+        }
+    }
+    return isIndexValid;
+}
+
