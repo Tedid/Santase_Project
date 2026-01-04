@@ -29,7 +29,7 @@ bool isTrump(const Card &card, const char *trumpSuit)
     return std::strcmp(card.suit, trumpSuit) == 0;
 }
 
-void initializeDeck(Card deck[DECK_SIZE], int &deckSize)
+void initializeDeck(Card deck[DECK_MAX_SIZE], int &deckSize)
 {
 
     const char *suits[] = {"♣", "♦", "♥", "♠"};
@@ -51,10 +51,10 @@ void initializeDeck(Card deck[DECK_SIZE], int &deckSize)
         }
     }
 
-    deckSize = DECK_SIZE;
+    deckSize = DECK_MAX_SIZE;
 
     // SHUFFLING DECK
-    std::shuffle(deck, deck + DECK_SIZE, std::mt19937{std::random_device{}()});
+    std::shuffle(deck, deck + DECK_MAX_SIZE, std::mt19937{std::random_device{}()});
 
     // // Recompute values in case shuffle or platform affected bytes
     // for (size_t i = 0; i < DECK_SIZE; ++i)
@@ -64,9 +64,9 @@ void initializeDeck(Card deck[DECK_SIZE], int &deckSize)
     // }
 }
 
-void distributeCards(Card deck[DECK_SIZE], Card P1[], Card P2[], int &deckSize)
+void distributeCards(Card deck[DECK_MAX_SIZE], Card P1[], Card P2[], int &deckSize)
 {
-    deckSize = DECK_SIZE;
+    deckSize = DECK_MAX_SIZE;
     int p1Idx = 0, p2Idx = 0;
 
     for (int j = 0; j < 2; ++j)
@@ -83,15 +83,15 @@ void distributeCards(Card deck[DECK_SIZE], Card P1[], Card P2[], int &deckSize)
     }
 
     // Sorting hands:
-    std::sort(P1, P1 + HAND_SIZE, compareCards);
-    std::sort(P2, P2 + HAND_SIZE, compareCards);
+    std::sort(P1, P1 + HAND_MAX_SIZE, compareCards);
+    std::sort(P2, P2 + HAND_MAX_SIZE, compareCards);
 }
 
-void revealTrump(Card deck[DECK_SIZE], char *trumpSuit)
+void revealTrump(Card deck[DECK_MAX_SIZE], char *trumpSuit)
 {
-    Card topCard = deck[DECK_SIZE - 1];
+    Card topCard = deck[DECK_MAX_SIZE - 1];
     // shift right by one
-    for (size_t i = DECK_SIZE - 1; i >= 1; i--)
+    for (size_t i = DECK_MAX_SIZE - 1; i >= 1; i--)
     {
         deck[i] = deck[i - 1];
         if (i == 1)
@@ -186,7 +186,7 @@ const char *getSuit(const Card &card)
 -1 = empty deck
  0 = deal completed
 */
-int dealCard(Card deck[DECK_SIZE], Card PHand[], int &deckSize, int &handSize)
+int dealCard(Card deck[DECK_MAX_SIZE], Card PHand[], int &deckSize, int &handSize)
 {
     if (deckSize <= 0)
     {
@@ -212,7 +212,7 @@ void cardPrint(const Card &card)
     std::cout << card.rank << colorCode << getSuit(card) << COLOR_RESET;
 }
 
-void printPlayerHand(const Card hand[HAND_SIZE], size_t size)
+void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size)
 {
     std::cout << "[ ";
 

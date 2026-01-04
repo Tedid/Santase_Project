@@ -34,8 +34,8 @@ constexpr bool DEFAULT_LAST_TRICK_BONUS = true;
 
 // constexpr size_t MAX_STR_LEN = 1024;
 
-constexpr int DECK_MAX_SIZE = 24;
-constexpr int HAND_MAX_SIZE = 6;
+// constexpr int DECK_MAX_SIZE = 24;
+// constexpr int HAND_MAX_SIZE = 6;
 constexpr int THROWN_CARDS_MAX_NUMBER = 2;
 
 int main()
@@ -60,6 +60,7 @@ int main()
 
     int currentPlayerId = 1; // 1 for P1, 2 for P2
     int lastRoundWonPlayerId = 1;
+    bool isRoundClosed = false;
 
     //---- Editable through settings ----
     int requiredPointsToWin = DEFAULT_REQUIRED_POINTS_TO_WIN;
@@ -336,8 +337,16 @@ int main()
                 continue;
             }
 
+            // Current player "throws" a card
             if (currentPlayerId == 1)
             {
+                if (thrownCount == 1 && isRoundClosed)
+                {
+                    Card thrownCard = thrownCards[0];
+                    const char *thrownSuit = getSuit(thrownCard);
+                    bool handMathingThrownSuit[HAND_MAX_SIZE];
+                    
+                }
                 thrownCards[thrownCount++] = P1Hand[index];
                 std::cout << "P1 played ";
                 cardPrint(P1Hand[index]);
