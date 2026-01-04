@@ -354,7 +354,8 @@ int main()
             const char playNumChar = fullComm[spacePos + 1];
             int index = playNumChar - '0';
 
-            if (!isdigit(playNumChar) || index > 5 || index < 0)
+            int currentPlayerHandSize = (currentPlayerId==1 ? P1HandSize : P2HandSize);
+            if (!isdigit(playNumChar) || index >= currentPlayerHandSize || index < 0)
             {
                 std::cout << "Invalid card index" << std::endl;
                 continue;
