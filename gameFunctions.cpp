@@ -183,6 +183,7 @@ const char *getSuit(const Card &card)
 }
 
 /*
+-2 = full hand
 -1 = empty deck
  0 = deal completed
 */
@@ -190,12 +191,19 @@ int dealCard(Card deck[DECK_MAX_SIZE], Card PHand[], int &deckSize, int &handSiz
 {
     if (deckSize <= 0)
     {
-        return -1;
+        return -1; // Empty deck
+    }
+
+    if (handSize >= HAND_MAX_SIZE) {
+        return -2;
     }
 
     PHand[handSize] = deck[deckSize - 1];
     handSize++;
     deckSize--;
+
+    std::sort(PHand, PHand + handSize, compareCards);
+
 
     return 0;
 }

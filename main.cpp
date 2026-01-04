@@ -418,6 +418,26 @@ int main()
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
                 currentPlayerId = (P1WinsTrick ? 1 : 2); // Winner plays next
 
+                // Deal cards if the round is not closed
+                if (!isRoundClosed) {
+                    if (deckSize > 0) {
+                        // Winner draws the first card
+                        if (currentPlayerId == 1) {
+                            dealCard(deck, P1Hand, deckSize, P1HandSize);
+                        } else {
+                            dealCard(deck, P2Hand, deckSize, P2HandSize);
+                        }
+                    }
+                    if (deckSize > 0) {
+                        // The other player draws the second card
+                        if (currentPlayerId == 1) { // P1 won, P2 gets the next card
+                            dealCard(deck, P2Hand, deckSize, P2HandSize);
+                        } else { // P2 won, P1 gets the next card
+                            dealCard(deck, P1Hand, deckSize, P1HandSize);
+                        }
+                    }
+                }
+
                 thrownCount = 0;
             }
         }
