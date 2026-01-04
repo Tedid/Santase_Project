@@ -403,6 +403,7 @@ int main()
                 // CLOSED CHECK NEEDS TO BE ADDED!
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
                 currentPlayerId = (P1WinsTrick ? 1 : 2);
+                currentPlayerId = (P1WinsTrick ? 1 : 2);    // Winner plays next
 
                 thrownCount = 0;
             }
