@@ -61,7 +61,7 @@ int main()
 
     int currentPlayerId = 1; // 1 for P1, 2 for P2
     int lastRoundWonPlayerId = 1;
-    bool isRoundClosed = false;
+    bool isStockClosed = false;
 
     //---- Editable through settings ----
     int requiredPointsToWin = DEFAULT_REQUIRED_POINTS_TO_WIN;
@@ -342,11 +342,11 @@ int main()
             bool playSuccessful = false;
             if (currentPlayerId == 1)
             {
-                playSuccessful = processPlayerCardPlay(P1Hand, P1HandSize, thrownCards, thrownCount, trumpSuit, index, 1, isRoundClosed);
+                playSuccessful = processPlayerCardPlay(P1Hand, P1HandSize, thrownCards, thrownCount, trumpSuit, index, 1, isStockClosed);
             }
             else // currentPlayerId == 2
             {
-                playSuccessful = processPlayerCardPlay(P2Hand, P2HandSize, thrownCards, thrownCount, trumpSuit, index, 2, isRoundClosed);
+                playSuccessful = processPlayerCardPlay(P2Hand, P2HandSize, thrownCards, thrownCount, trumpSuit, index, 2, isStockClosed);
             }
 
             if (!playSuccessful)
@@ -407,7 +407,7 @@ int main()
                 currentPlayerId = (P1WinsTrick ? 1 : 2); // Winner plays next
 
                 // Deal cards if the round is not closed
-                if (!isRoundClosed)
+                if (!isStockClosed)
                 {
                     if (deckSize > 0)
                     {
@@ -447,9 +447,9 @@ int main()
                 continue;
             }
 
-            if (isRoundClosed)
+            if (isStockClosed)
             {
-                std::cout << "Round is closed, you can't switch-nine." << std::endl;
+                std::cout << "Stock is closed, you can't switch-nine." << std::endl;
                 continue;
             }
 
@@ -489,7 +489,11 @@ int main()
                     currentCard = deck[0];
                     deck[0] = tempCardInHand;
 
-                    std::cout << "Successfully switched 9 of trump with the bottom card." << std::endl;
+                    std::cout << "You exchanged ";
+                    cardPrint(nine_Trump);
+                    std::cout << " for ";
+                    cardPrint(currentCard);
+                    std::cout << " (trump suit)" << std::endl;
 
                     std::sort((currentPlayerId == 1 ? P1Hand : P2Hand), (currentPlayerId == 1 ? P1Hand + P1HandSize : P2Hand + P2HandSize), compareCards);
 
@@ -498,7 +502,9 @@ int main()
             }
             if (!foundNineOfTrump)
             {
-                std::cout << "Player " << (currentPlayerId == 1 ? "1" : "2") << " doesn't have the 9 of trump!" << std::endl;
+                std::cout << "Player " << (currentPlayerId == 1 ? "1" : "2") << " doesn't have the ";
+                cardPrint(nine_Trump);
+                std::cout << std::endl;
             }
         }
 
