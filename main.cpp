@@ -64,9 +64,9 @@ int main()
     bool isStockClosed = false;
     char declaredMarriageSuit[SUIT_MAX_LENGTH];         // Stores the suit of the last declared marriage
     bool isMarriageDeclaredAndCardMustBePlayed = false; // True if a marriage was declared and one of its cards must be played
-    
+
     Card lastTrickCards[THROWN_CARDS_MAX_NUMBER];
-    int lastTrickWinnerId = 0; 
+    int lastTrickWinnerId = 0;
 
     //---- Editable through settings ----
     int requiredPointsToWin = DEFAULT_REQUIRED_POINTS_TO_WIN;
@@ -89,6 +89,15 @@ int main()
             std::cout << "P" << currentPlayerId << "'s turn:" << std::endl;
             if (currentPlayerId == 1)
             {
+                if (P1HandSize > 0)
+                {
+                    std::cout << "       "; // 7x spaces
+                    for (int i = 0; i < P1HandSize; i++)
+                    {
+                        std::cout << "[" << i << "] ";
+                    }
+                    std::cout << std::endl;
+                }
                 std::cout << "Hand: ";
                 printPlayerHand(P1Hand, P1HandSize);
                 std::cout << std::endl;
@@ -96,6 +105,16 @@ int main()
 
             else
             {
+                if (P2HandSize > 0)
+                {
+                    std::cout << "       "; // 7x spaces
+                    for (int i = 0; i < P2HandSize; i++)
+                    {
+                        std::cout << "[" << i << "] ";
+                    }
+                    std::cout << std::endl;
+                }
+
                 std::cout << "Hand: ";
                 printPlayerHand(P2Hand, P2HandSize);
                 std::cout << std::endl;
@@ -171,7 +190,7 @@ int main()
             P2hasWonCard = false;
             isStockClosed = false;
             isMarriageDeclaredAndCardMustBePlayed = false;
-            lastTrickWinnerId = 0; 
+            lastTrickWinnerId = 0;
             initializeDeck(deck, deckSize); // Shuffling deck
             distributeCards(deck, P1Hand, P2Hand, deckSize);
             P1HandSize = HAND_MAX_SIZE;
@@ -436,7 +455,7 @@ int main()
                 // Store last trick information
                 lastTrickCards[0] = thrownCards[0];
                 lastTrickCards[1] = thrownCards[1];
-                lastTrickWinnerId = currentPlayerId; 
+                lastTrickWinnerId = currentPlayerId;
 
                 // Deal cards if the round is not closed
                 if (!isStockClosed)
@@ -691,9 +710,12 @@ int main()
         }
         else if (strcmp(firstCommWord, "last-trick") == 0)
         {
-            if (lastTrickWinnerId == 0) {
+            if (lastTrickWinnerId == 0)
+            {
                 std::cout << "No tricks have been played yet." << std::endl;
-            } else {
+            }
+            else
+            {
                 std::cout << "Player " << firstPlayedPlayerId << ": ";
                 cardPrint(lastTrickCards[0]);
                 std::cout << std::endl;
@@ -714,7 +736,8 @@ int main()
         }
         else if (strcmp(firstCommWord, "status") == 0)
         {
-            if (!hasGameStarted) {
+            if (!hasGameStarted)
+            {
                 std::cout << "The game has not started yet. Type 'start' to begin." << std::endl;
                 continue;
             }
@@ -728,15 +751,19 @@ int main()
             printSuitColored(trumpSuit);
             std::cout << std::endl;
             std::cout << "Cards left in deck: " << deckSize << std::endl;
-            if (deckSize > 0) {
+            if (deckSize > 0)
+            {
                 std::cout << "Bottom card of deck: ";
                 cardPrint(deck[0]);
                 std::cout << std::endl;
-            } else {
+            }
+            else
+            {
                 std::cout << "Deck is empty." << std::endl;
             }
             std::cout << "Stock is " << (isStockClosed ? "CLOSED" : "OPEN") << std::endl;
-            if (isMarriageDeclaredAndCardMustBePlayed) {
+            if (isMarriageDeclaredAndCardMustBePlayed)
+            {
                 std::cout << "Marriage declared for ";
                 printSuitColored(declaredMarriageSuit);
                 std::cout << ". P" << currentPlayerId << " must play a K or Q of this suit." << std::endl;
