@@ -165,13 +165,13 @@ int main()
             P1hasWonCard = false;
             P2hasWonCard = false;
             isStockClosed = false;
-            isMarriageDeclaredAndCardMustBePlayed = false; // Reset on new game
+            isMarriageDeclaredAndCardMustBePlayed = false; 
 
             initializeDeck(deck, deckSize); // Shuffling deck
             distributeCards(deck, P1Hand, P2Hand, deckSize);
             P1HandSize = HAND_MAX_SIZE;
             P2HandSize = HAND_MAX_SIZE;
-            revealTrump(deck, trumpSuit); // Top card goes under and becomes a trump
+            revealTrump(deck,deckSize, trumpSuit); // Top card goes under and becomes a trump
         }
         else if (strcmp(firstCommWord, "rules") == 0)
         {

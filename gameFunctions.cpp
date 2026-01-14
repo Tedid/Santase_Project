@@ -20,7 +20,6 @@ const int RANK_VALUES[] = {6, 5, 4, 3, 2, 1};
 // A=6, 10=5, K=4, Q=3, J=2, 9=1
 //-----------------------------------------
 
-
 bool isTrump(const Card &card, const char *trumpSuit)
 {
     if (!trumpSuit || trumpSuit[0] == '\0')
@@ -69,14 +68,14 @@ void distributeCards(Card deck[DECK_MAX_SIZE], Card P1[], Card P2[], int &deckSi
     deckSize = DECK_MAX_SIZE;
     int p1Idx = 0, p2Idx = 0;
 
-    for (int j = 0; j < 2; ++j)
+    for (int j = 0; j < 2; j++)
     {
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; i++)
         {
             // take from the top (deck[DECK_SIZE-1])
             P1[p1Idx++] = deck[--deckSize];
         }
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; i++)
         {
             P2[p2Idx++] = deck[--deckSize];
         }
@@ -87,19 +86,19 @@ void distributeCards(Card deck[DECK_MAX_SIZE], Card P1[], Card P2[], int &deckSi
     std::sort(P2, P2 + HAND_MAX_SIZE, compareCards);
 }
 
-void revealTrump(Card deck[DECK_MAX_SIZE], char *trumpSuit)
+void revealTrump(Card deck[DECK_MAX_SIZE], int deckSize, char *trumpSuit)
 {
-    Card topCard = deck[DECK_MAX_SIZE - 1];
-    // shift right by one
-    for (size_t i = DECK_MAX_SIZE - 1; i >= 1; i--)
+    Card &topCard = deck[deckSize - 1];
+    // shift up by one
+    for (int i = DECK_MAX_SIZE - 1; i >= 1; i--)
     {
         deck[i] = deck[i - 1];
         if (i == 1)
-            break; // size_t safety for unsigned wrap
+            break;
     }
     deck[0] = topCard;
 
-    // set trump suit (raw suit symbol)
+    // Set trump suit
     std::strncpy(trumpSuit, deck[0].suit, SUIT_MAX_LENGTH);
     trumpSuit[SUIT_MAX_LENGTH - 1] = '\0';
 }
@@ -194,7 +193,8 @@ int dealCard(Card deck[DECK_MAX_SIZE], Card PHand[], int &deckSize, int &handSiz
         return -1; // Empty deck
     }
 
-    if (handSize >= HAND_MAX_SIZE) {
+    if (handSize >= HAND_MAX_SIZE)
+    {
         return -2;
     }
 
@@ -203,7 +203,6 @@ int dealCard(Card deck[DECK_MAX_SIZE], Card PHand[], int &deckSize, int &handSiz
     deckSize--;
 
     std::sort(PHand, PHand + handSize, compareCards);
-
 
     return 0;
 }
@@ -234,67 +233,88 @@ void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size)
     std::cout << " ]";
 }
 
-bool isValidPlayWhenClosed(const Card* playerHand, int playerHandSize, const Card& opponentCard, const char* trumpSuit, int playedIndex) {
+bool isValidPlayWhenClosed(const Card *playerHand, int playerHandSize, const Card &opponentCard, const char *trumpSuit, int playedIndex)
+{
     const char *OPPONENT_SUIT = getSuit(opponentCard);
-    
+
     int validIndexes[HAND_MAX_SIZE]; // Use HAND_MAX_SIZE or a dynamically allocated array
     int countOfValidIndexes = 0;
 
     bool playerHasMatchingOpponentSuit = false;
     bool handMatchingOpponentSuit[HAND_MAX_SIZE] = {false};
 
-    for (int i = 0; i < playerHandSize; i++) {
-        if (strcmp(OPPONENT_SUIT, getSuit(playerHand[i])) == 0) {
+    for (int i = 0; i < playerHandSize; i++)
+    {
+        if (strcmp(OPPONENT_SUIT, getSuit(playerHand[i])) == 0)
+        {
             handMatchingOpponentSuit[i] = true;
             playerHasMatchingOpponentSuit = true;
         }
     }
 
-    if (playerHasMatchingOpponentSuit) {
+    if (playerHasMatchingOpponentSuit)
+    {
         bool playerHasStrongerCard = false;
-        for (int k = 0; k < playerHandSize; k++) {
-            if (handMatchingOpponentSuit[k] && !compareCards(opponentCard, playerHand[k])) { // If a matching suit card is stronger
+        for (int k = 0; k < playerHandSize; k++)
+        {
+            if (handMatchingOpponentSuit[k] && !compareCards(opponentCard, playerHand[k]))
+            { // If a matching suit card is stronger
                 validIndexes[countOfValidIndexes++] = k;
                 playerHasStrongerCard = true;
             }
         }
 
-        if (!playerHasStrongerCard) {
-            for (int k = 0; k < playerHandSize; k++) {
-                if (handMatchingOpponentSuit[k]) { // All matching suit cards are valid if no stronger matching suit card
+        if (!playerHasStrongerCard)
+        {
+            for (int k = 0; k < playerHandSize; k++)
+            {
+                if (handMatchingOpponentSuit[k])
+                { // All matching suit cards are valid if no stronger matching suit card
                     validIndexes[countOfValidIndexes++] = k;
                 }
             }
         }
-    } else { // Player has no matching suit cards
+    }
+    else
+    { // Player has no matching suit cards
         bool playerHasTrumpCard = false;
         bool handTrumpCards[HAND_MAX_SIZE] = {false};
 
-        for (int i = 0; i < playerHandSize; i++) {
-            if (isTrump(playerHand[i], trumpSuit)) {
+        for (int i = 0; i < playerHandSize; i++)
+        {
+            if (isTrump(playerHand[i], trumpSuit))
+            {
                 handTrumpCards[i] = true;
                 playerHasTrumpCard = true;
             }
         }
 
-        if (playerHasTrumpCard) {
+        if (playerHasTrumpCard)
+        {
             // Only trump cards are valid
-            for (int k = 0; k < playerHandSize; k++) {
-                if (handTrumpCards[k]) {
+            for (int k = 0; k < playerHandSize; k++)
+            {
+                if (handTrumpCards[k])
+                {
                     validIndexes[countOfValidIndexes++] = k;
                 }
             }
-        } else {
+        }
+        else
+        {
             // Everything is valid
-            for (int k = 0; k < playerHandSize; k++) {
+            for (int k = 0; k < playerHandSize; k++)
+            {
                 validIndexes[countOfValidIndexes++] = k;
             }
         }
     }
 
     bool isIndexValid = false;
-    for (int i = 0; i < countOfValidIndexes; i++) {
-        if (validIndexes[i] == playedIndex) {
+    for (int i = 0; i < countOfValidIndexes; i++)
+    {
+        if (validIndexes[i] == playedIndex)
+        {
             isIndexValid = true;
             break;
         }
@@ -327,5 +347,3 @@ bool processPlayerCardPlay(Card playerHand[], int &playerHandSize, Card thrownCa
     --playerHandSize;
     return true;
 }
-
-
