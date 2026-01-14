@@ -37,6 +37,7 @@ constexpr bool DEFAULT_LAST_TRICK_BONUS = true;
 // constexpr int DECK_MAX_SIZE = 24;
 // constexpr int HAND_MAX_SIZE = 6;
 constexpr int THROWN_CARDS_MAX_NUMBER = 2;
+constexpr int NUMBER_OF_RANKS = 6;
 
 int main()
 {
@@ -58,6 +59,9 @@ int main()
     int P1GamePoints = 0, P2Gamepoints = 0;
     bool P1hasWonCard = false, P2hasWonCard = false;
     int P1RoundPoints = 0, P2RoundPoints = 0;
+
+    // A=11, 10=10, K=4, Q=3, J=2, 9=0 points
+    const int RANK_POINTS[] = {11, 10, 4, 3, 2, 0};
 
     int currentPlayerId = 1; // 1 for P1, 2 for P2
     int lastRoundWonPlayerId = 1;
@@ -88,7 +92,13 @@ int main()
         }
         else
         {
-            std::cout << "P" << currentPlayerId << "'s turn:" << std::endl;
+            std::cout << "P" << currentPlayerId << "'s turn:";
+
+            if(arePointsVisible){
+                std::cout << "\t\t(" << (currentPlayerId == 1 ? P1RoundPoints : P2RoundPoints) << " points)";
+            }
+
+            std::cout << std::endl;
             if (currentPlayerId == 1)
             {
                 if (P1HandSize > 0)
@@ -442,16 +452,24 @@ int main()
                     }
                 }
 
+                int wonPoints = RANK_POINTS[NUMBER_OF_RANKS - firstCard.rankValue] + RANK_POINTS[NUMBER_OF_RANKS - secondCard.rankValue];
                 if (P1WinsTrick)
                 {
                     P1hasWonCard = true;
+                    P1RoundPoints += wonPoints;
                 }
                 else
                 {
                     P2hasWonCard = true;
+                    P2RoundPoints += wonPoints;
                 }
 
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
+
+                if(wonPoints>0){
+                    std::cout << "(+" << wonPoints << " points)" << std::endl;
+                }
+
                 currentPlayerId = (P1WinsTrick ? 1 : 2); // Winner plays next
 
                 // Store last trick information
