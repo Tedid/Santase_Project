@@ -56,6 +56,7 @@ int main()
 
     int firstPlayedPlayerId = 0;
     int P1GamePoints = 0, P2Gamepoints = 0;
+    bool P1hasWonCard = false, P2hasWonCard = false;
     int P1RoundPoints = 0, P2RoundPoints = 0;
 
     int currentPlayerId = 1; // 1 for P1, 2 for P2
@@ -393,6 +394,15 @@ int main()
                     }
                 }
 
+                if (P1WinsTrick)
+                {
+                    P1hasWonCard = true;
+                }
+                else
+                {
+                    P2hasWonCard = true;
+                }
+
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
                 currentPlayerId = (P1WinsTrick ? 1 : 2); // Winner plays next
 
@@ -430,6 +440,13 @@ int main()
         }
         else if (strcmp(firstCommWord, "switch-nine") == 0)
         {
+            //If player hasn't yet won a card, they can't swap cards :)
+            if (!(currentPlayerId == 1 ? P1hasWonCard : P2hasWonCard))
+            {
+                std::cout << "Player " << (currentPlayerId == 1 ? "1" : "2") << " doesn't have a won set of cards yet!" << std::endl;
+                continue;
+            }
+
             Card nine_Trump;
             std::strncpy(nine_Trump.suit, trumpSuit, SUIT_MAX_LENGTH);
             nine_Trump.suit[SUIT_MAX_LENGTH - 1] = '\0';
@@ -443,7 +460,7 @@ int main()
 
             for (int i = 0; i < (currentPlayerId == 1 ? P1HandSize : P2HandSize); i++)
             {
-                Card& currentCard = (currentPlayerId == 1 ? P1Hand[i] : P2Hand[i]);
+                Card &currentCard = (currentPlayerId == 1 ? P1Hand[i] : P2Hand[i]);
                 if (strcmp(currentCard.suit, nine_Trump.suit) == 0 &&
                     strcmp(currentCard.rank, nine_Trump.rank) == 0)
                 {
