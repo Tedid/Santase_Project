@@ -62,6 +62,8 @@ int main()
     int currentPlayerId = 1; // 1 for P1, 2 for P2
     int lastRoundWonPlayerId = 1;
     bool isStockClosed = false;
+    char declaredMarriageSuit[SUIT_MAX_LENGTH]; // Stores the suit of the last declared marriage
+    bool isMarriageDeclaredAndCardMustBePlayed = false; // True if a marriage was declared and one of its cards must be played
 
     //---- Editable through settings ----
     int requiredPointsToWin = DEFAULT_REQUIRED_POINTS_TO_WIN;
@@ -163,6 +165,7 @@ int main()
             P1hasWonCard = false;
             P2hasWonCard = false;
             isStockClosed = false;
+            isMarriageDeclaredAndCardMustBePlayed = false; // Reset on new game
 
             initializeDeck(deck, deckSize); // Shuffling deck
             distributeCards(deck, P1Hand, P2Hand, deckSize);
@@ -342,6 +345,22 @@ int main()
                 continue;
             }
 
+            // Marriage obligation check
+            if (isMarriageDeclaredAndCardMustBePlayed)
+            {
+                Card cardToPlay = (currentPlayerId == 1 ? P1Hand[index] : P2Hand[index]);
+                if (strcmp(cardToPlay.suit, declaredMarriageSuit) != 0 ||
+                    (strcmp(cardToPlay.rank, "K") != 0 && strcmp(cardToPlay.rank, "Q") != 0))
+                {
+                    std::cout << "You must play either the King or Queen of the declared marriage suit (";
+                    printSuitColored(declaredMarriageSuit);
+                    std::cout << ")!" << std::endl;
+                    continue; // Prevent playing the wrong card
+                }
+                // If the correct card is played, reset the flag
+                isMarriageDeclaredAndCardMustBePlayed = false;
+            }
+
             bool playSuccessful = false;
             if (currentPlayerId == 1)
             {
@@ -512,7 +531,110 @@ int main()
         }
         else if (strcmp(firstCommWord, "marriage") == 0)
         {
+            if (isStockClosed) {
+                std::cout << "Stock is closed, you cannot declare a marriage." << std::endl;
+                continue;
+            }
+            if (thrownCount == 1) { // If a card has already been played in this trick
+                std::cout << "You cannot declare a marriage after the first card of the trick has been played." << std::endl;
+                continue;
+            }
+            if (isMarriageDeclaredAndCardMustBePlayed) { 
+                 std::cout << "You have already declared a marriage and must play one of its cards." << std::endl;
+                 continue;
+            }
 
+            // Check if the current player has won at least one trick
+            if (!(currentPlayerId == 1 ? P1hasWonCard : P2hasWonCard)) {
+                std::cout << "You must have won at least one trick to declare a marriage." << std::endl;
+                continue;
+            }
+
+            // Check for the very first trick of the round (no player has won cards)
+            if (!P1hasWonCard && !P2hasWonCard) {
+                std::cout << "You cannot declare a marriage during the first trick of the round." << std::endl;
+                continue;
+            }
+
+            char suitChar = fullComm[spacePos + 1];
+            char targetSuit[SUIT_MAX_LENGTH];
+            bool isValidSuitChar = true;
+
+            switch (std::toupper(suitChar)) {
+                case 'H': std::strcpy(targetSuit, "♥"); break;
+                case 'D': std::strcpy(targetSuit, "♦"); break;
+                case 'C': std::strcpy(targetSuit, "♣"); break;
+                case 'S': std::strcpy(targetSuit, "♠"); break;
+                default: isValidSuitChar = false; break;
+            }
+
+            if (!isValidSuitChar) {
+                std::cout << "Invalid suit specified. Use H(";
+                printSuitColored("♥");
+                std::cout << "), D(";
+                printSuitColored("♦");
+                std::cout << "), C(";
+                printSuitColored("♣");
+                std::cout << "), or S(";
+                printSuitColored("♠");
+                std::cout << ")." << std::endl;
+                continue;
+            }
+
+            Card* currentHand = (currentPlayerId == 1 ? P1Hand : P2Hand);
+            int currentHandSize = (currentPlayerId == 1 ? P1HandSize : P2HandSize);
+
+            bool hasKing = false;
+            bool hasQueen = false;
+
+            for (int i = 0; i < currentHandSize; ++i) {
+                if (strcmp(currentHand[i].suit, targetSuit) == 0) {
+                    if (strcmp(currentHand[i].rank, "K") == 0) {
+                        hasKing = true;
+                    } else if (strcmp(currentHand[i].rank, "Q") == 0) {
+                        hasQueen = true;
+                    }
+                }
+            }
+
+            if (hasKing && hasQueen) {
+                int pointsEarned = 0;
+                if (strcmp(targetSuit, trumpSuit) == 0) {
+                    pointsEarned = trumpMarriage;
+                    std::cout << "Marriage declared: K";
+                    printSuitColored(targetSuit);
+                    std::cout << " + Q";
+                    printSuitColored(targetSuit);
+                    std::cout << " (trump suit)" << std::endl;
+                } else {
+                    pointsEarned = nonTrumpMarriage;
+                    std::cout << "Marriage declared: K";
+                    printSuitColored(targetSuit);
+                    std::cout << " + Q";
+                    printSuitColored(targetSuit);
+                    std::cout << std::endl;
+                }
+
+                if (currentPlayerId == 1) {
+                    P1RoundPoints += pointsEarned;
+                } else {
+                    P2RoundPoints += pointsEarned;
+                }
+
+                std::cout << "You earned " << pointsEarned << " points." << std::endl;
+                std::cout << "You must play K";
+                printSuitColored(targetSuit);
+                std::cout << " or Q";
+                printSuitColored(targetSuit);
+                std::cout << std::endl;
+
+                isMarriageDeclaredAndCardMustBePlayed = true;
+                std::strcpy(declaredMarriageSuit, targetSuit);
+            } else {
+                std::cout << "You don't have both the King and Queen of ";
+                printSuitColored(targetSuit);
+                std::cout << " in your hand." << std::endl;
+            }
         }
         else if (strcmp(firstCommWord, "close") == 0)
         {
