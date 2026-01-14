@@ -1,3 +1,4 @@
+#include <cstring>
 #include "gameFunctions.hpp"
 
 const char *COLOR_RED = "\033[31m";
@@ -19,7 +20,6 @@ const int RANK_VALUES[] = {6, 5, 4, 3, 2, 1};
 // A=6, 10=5, K=4, Q=3, J=2, 9=1
 //-----------------------------------------
 
-#include <cstring>
 
 bool isTrump(const Card &card, const char *trumpSuit)
 {
