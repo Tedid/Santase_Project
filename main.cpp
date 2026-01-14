@@ -68,6 +68,8 @@ int main()
     Card lastTrickCards[THROWN_CARDS_MAX_NUMBER];
     int lastTrickWinnerId = 0;
 
+    //REMINDER FOR ME TO ADD COLOURING TO TRUMP CARDS
+    
     //---- Editable through settings ----
     int requiredPointsToWin = DEFAULT_REQUIRED_POINTS_TO_WIN;
     int nonTrumpMarriage = DEFAULT_NON_TRUMP_MARRIAGE;
