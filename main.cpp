@@ -64,6 +64,9 @@ int main()
     bool isStockClosed = false;
     char declaredMarriageSuit[SUIT_MAX_LENGTH];         // Stores the suit of the last declared marriage
     bool isMarriageDeclaredAndCardMustBePlayed = false; // True if a marriage was declared and one of its cards must be played
+    
+    Card lastTrickCards[THROWN_CARDS_MAX_NUMBER];
+    int lastTrickWinnerId = 0; 
 
     //---- Editable through settings ----
     int requiredPointsToWin = DEFAULT_REQUIRED_POINTS_TO_WIN;
@@ -168,7 +171,7 @@ int main()
             P2hasWonCard = false;
             isStockClosed = false;
             isMarriageDeclaredAndCardMustBePlayed = false;
-
+            lastTrickWinnerId = 0; 
             initializeDeck(deck, deckSize); // Shuffling deck
             distributeCards(deck, P1Hand, P2Hand, deckSize);
             P1HandSize = HAND_MAX_SIZE;
@@ -430,6 +433,11 @@ int main()
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
                 currentPlayerId = (P1WinsTrick ? 1 : 2); // Winner plays next
 
+                // Store last trick information
+                lastTrickCards[0] = thrownCards[0];
+                lastTrickCards[1] = thrownCards[1];
+                lastTrickWinnerId = currentPlayerId; 
+
                 // Deal cards if the round is not closed
                 if (!isStockClosed)
                 {
@@ -679,10 +687,21 @@ int main()
         else if (strcmp(firstCommWord, "close") == 0)
         {
             isStockClosed = true;
-            std::cout << "Stock closed. No more cards will be drawn./nStrict rules are now in effect" << std::endl;
+            std::cout << "Stock closed. No more cards will be drawn.\nStrict rules are now in effect" << std::endl;
         }
         else if (strcmp(firstCommWord, "last-trick") == 0)
         {
+            if (lastTrickWinnerId == 0) {
+                std::cout << "No tricks have been played yet." << std::endl;
+            } else {
+                std::cout << "Player " << firstPlayedPlayerId << ": ";
+                cardPrint(lastTrickCards[0]);
+                std::cout << std::endl;
+                std::cout << "Player " << (3 - firstPlayedPlayerId) << ": ";
+                cardPrint(lastTrickCards[1]);
+                std::cout << std::endl;
+                std::cout << "Winner: Player " << lastTrickWinnerId << std::endl;
+            }
         }
         else if (strcmp(firstCommWord, "trump") == 0)
         {
