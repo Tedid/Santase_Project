@@ -302,3 +302,30 @@ bool isValidPlayWhenClosed(const Card* playerHand, int playerHandSize, const Car
     return isIndexValid;
 }
 
+bool processPlayerCardPlay(Card playerHand[], int &playerHandSize, Card thrownCards[], int &thrownCount, const char trumpSuit[], int cardIndex, int playerId, bool isRoundClosed)
+{
+    // Check if second thrown card is valid when round is closed
+    if (thrownCount == 1 && isRoundClosed)
+    {
+        if (!isValidPlayWhenClosed(playerHand, playerHandSize, thrownCards[0], trumpSuit, cardIndex))
+        {
+            std::cout << "You can't play this card!" << std::endl;
+            return false;
+        }
+    }
+
+    thrownCards[thrownCount++] = playerHand[cardIndex];
+    std::cout << "P" << playerId << " played ";
+    cardPrint(playerHand[cardIndex]);
+    std::cout << std::endl;
+
+    // Remove the card from the player's hand
+    for (int k = cardIndex; k < playerHandSize - 1; ++k)
+    {
+        playerHand[k] = playerHand[k + 1];
+    }
+    --playerHandSize;
+    return true;
+}
+
+
