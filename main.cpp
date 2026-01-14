@@ -714,6 +714,33 @@ int main()
         }
         else if (strcmp(firstCommWord, "status") == 0)
         {
+            if (!hasGameStarted) {
+                std::cout << "The game has not started yet. Type 'start' to begin." << std::endl;
+                continue;
+            }
+            std::cout << "--- CURRENT GAME STATUS ---" << std::endl;
+            std::cout << "Player 1 Game Points: " << P1GamePoints << std::endl;
+            std::cout << "Player 2 Game Points: " << P2Gamepoints << std::endl;
+            std::cout << "Player 1 Round Points: " << P1RoundPoints << std::endl;
+            std::cout << "Player 2 Round Points: " << P2RoundPoints << std::endl;
+            std::cout << "Current Player: P" << currentPlayerId << std::endl;
+            std::cout << "Trump Suit: ";
+            printSuitColored(trumpSuit);
+            std::cout << std::endl;
+            std::cout << "Cards left in deck: " << deckSize << std::endl;
+            if (deckSize > 0) {
+                std::cout << "Bottom card of deck: ";
+                cardPrint(deck[0]);
+                std::cout << std::endl;
+            } else {
+                std::cout << "Deck is empty." << std::endl;
+            }
+            std::cout << "Stock is " << (isStockClosed ? "CLOSED" : "OPEN") << std::endl;
+            if (isMarriageDeclaredAndCardMustBePlayed) {
+                std::cout << "Marriage declared for ";
+                printSuitColored(declaredMarriageSuit);
+                std::cout << ". P" << currentPlayerId << " must play a K or Q of this suit." << std::endl;
+            }
         }
         else if (strcmp(firstCommWord, "stop") == 0)
         {
