@@ -440,10 +440,16 @@ int main()
         }
         else if (strcmp(firstCommWord, "switch-nine") == 0)
         {
-            //If player hasn't yet won a card, they can't swap cards :)
+            // If player hasn't yet won a card, they can't swap cards :)
             if (!(currentPlayerId == 1 ? P1hasWonCard : P2hasWonCard))
             {
                 std::cout << "Player " << (currentPlayerId == 1 ? "1" : "2") << " doesn't have a won set of cards yet!" << std::endl;
+                continue;
+            }
+
+            if (isRoundClosed)
+            {
+                std::cout << "Round is closed, you can't switch-nine." << std::endl;
                 continue;
             }
 
