@@ -160,6 +160,9 @@ int main()
             P1GamePoints = 0, P2Gamepoints = 0;
             P1RoundPoints = 0, P2RoundPoints = 0;
             hasGameStarted = true;
+            P1hasWonCard = false;
+            P2hasWonCard = false;
+            isStockClosed = false;
 
             initializeDeck(deck, deckSize); // Shuffling deck
             distributeCards(deck, P1Hand, P2Hand, deckSize);
@@ -507,9 +510,9 @@ int main()
                 std::cout << std::endl;
             }
         }
-
         else if (strcmp(firstCommWord, "marriage") == 0)
         {
+
         }
         else if (strcmp(firstCommWord, "close") == 0)
         {
