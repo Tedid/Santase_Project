@@ -705,6 +705,9 @@ int main()
         }
         else if (strcmp(firstCommWord, "trump") == 0)
         {
+            std::cout << "Trump suit: ";
+            printSuitColored(trumpSuit);
+            std::cout << std::endl;
         }
         else if (strcmp(firstCommWord, "history") == 0)
         {
