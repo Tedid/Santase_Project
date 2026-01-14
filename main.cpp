@@ -453,6 +453,18 @@ int main()
                 continue;
             }
 
+            if (deckSize == 0)
+            {
+                std::cout << "Deck is empty, you can't switch-nine" << std::endl;
+                continue;
+            }
+
+            if (deckSize >= 2)
+            {
+                std::cout << "Deck has only two cards, you can't switch-nine" << std::endl;
+                continue;
+            }
+
             Card nine_Trump;
             std::strncpy(nine_Trump.suit, trumpSuit, SUIT_MAX_LENGTH);
             nine_Trump.suit[SUIT_MAX_LENGTH - 1] = '\0';
