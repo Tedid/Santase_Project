@@ -331,7 +331,7 @@ int main()
             const char playNumChar = fullComm[spacePos + 1];
             int index = playNumChar - '0';
 
-            int currentPlayerHandSize = (currentPlayerId==1 ? P1HandSize : P2HandSize);
+            int currentPlayerHandSize = (currentPlayerId == 1 ? P1HandSize : P2HandSize);
             if (!isdigit(playNumChar) || index >= currentPlayerHandSize || index < 0)
             {
                 std::cout << "Invalid card index" << std::endl;
@@ -348,7 +348,8 @@ int main()
                 playSuccessful = processPlayerCardPlay(P2Hand, P2HandSize, thrownCards, thrownCount, trumpSuit, index, 2, isRoundClosed);
             }
 
-            if (!playSuccessful) {
+            if (!playSuccessful)
+            {
                 continue; // Skip the rest of the play logic if the card wasn't played successfully
             }
 
@@ -396,20 +397,29 @@ int main()
                 currentPlayerId = (P1WinsTrick ? 1 : 2); // Winner plays next
 
                 // Deal cards if the round is not closed
-                if (!isRoundClosed) {
-                    if (deckSize > 0) {
+                if (!isRoundClosed)
+                {
+                    if (deckSize > 0)
+                    {
                         // Winner draws the first card
-                        if (currentPlayerId == 1) {
+                        if (currentPlayerId == 1)
+                        {
                             dealCard(deck, P1Hand, deckSize, P1HandSize);
-                        } else {
+                        }
+                        else
+                        {
                             dealCard(deck, P2Hand, deckSize, P2HandSize);
                         }
                     }
-                    if (deckSize > 0) {
+                    if (deckSize > 0)
+                    {
                         // The other player draws the second card
-                        if (currentPlayerId == 1) { // P1 won, P2 gets the next card
+                        if (currentPlayerId == 1)
+                        { // P1 won, P2 gets the next card
                             dealCard(deck, P2Hand, deckSize, P2HandSize);
-                        } else { // P2 won, P1 gets the next card
+                        }
+                        else
+                        { // P2 won, P1 gets the next card
                             dealCard(deck, P1Hand, deckSize, P1HandSize);
                         }
                     }
@@ -421,6 +431,7 @@ int main()
         else if (strcmp(firstCommWord, "switch-nine") == 0)
         {
         }
+
         else if (strcmp(firstCommWord, "marriage") == 0)
         {
         }
