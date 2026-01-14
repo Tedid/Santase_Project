@@ -137,8 +137,8 @@ int main()
             // In order to not reset the game on mistake:
             if (hasGameStarted)
             {
-                const char *prompt = "This will reset this whole game and start it from scratch. Continue?";
-                if (!getConfirmation(prompt))
+                const char *PROMPT = "This will reset this whole game and start it from scratch. Continue?";
+                if (!getConfirmation(PROMPT))
                 {
                     continue; // Dismiss the command
                 }
@@ -146,8 +146,8 @@ int main()
 
             if (wereSettingsModified)
             {
-                const char *prompt = "Do you want to reset the settings to their defaults?";
-                if (getConfirmation(prompt))
+                const char *PROMPT = "Do you want to reset the settings to their defaults?";
+                if (getConfirmation(PROMPT))
                 {
                     requiredPointsToWin = DEFAULT_REQUIRED_POINTS_TO_WIN;
                     nonTrumpMarriage = DEFAULT_NON_TRUMP_MARRIAGE;
@@ -262,16 +262,16 @@ int main()
                 {
                     if (arePointsVisible)
                     {
-                        const char *prompt = "Do you want to stop seeing players' points?";
-                        if (getConfirmation(prompt))
+                        const char *PROMPT = "Do you want to stop seeing players' points?";
+                        if (getConfirmation(PROMPT))
                         {
                             arePointsVisible = false;
                         }
                     }
                     else
                     {
-                        const char *prompt = "Do you want to start seeing players' points?";
-                        if (getConfirmation(prompt))
+                        const char *PROMPT = "Do you want to start seeing players' points?";
+                        if (getConfirmation(PROMPT))
                         {
                             arePointsVisible = true;
                         }
@@ -282,16 +282,16 @@ int main()
                 {
                     if (lastTrickBonus)
                     {
-                        const char *prompt = "Do you want to stop the 10 bonus points for the last trick?";
-                        if (getConfirmation(prompt))
+                        const char *PROMPT = "Do you want to stop the 10 bonus points for the last trick?";
+                        if (getConfirmation(PROMPT))
                         {
                             lastTrickBonus = false;
                         }
                     }
                     else
                     {
-                        const char *prompt = "Do you want to have 10 bonus points for the last trick?";
-                        if (getConfirmation(prompt))
+                        const char *PROMPT = "Do you want to have 10 bonus points for the last trick?";
+                        if (getConfirmation(PROMPT))
                         {
                             lastTrickBonus = true;
                         }
@@ -335,11 +335,11 @@ int main()
         }
         else if (strcmp(firstCommWord, "play") == 0)
         {
-            const char playNumChar = fullComm[spacePos + 1];
-            int index = playNumChar - '0';
+            const char PLAY_NUM_CHAR = fullComm[spacePos + 1];
+            int index = PLAY_NUM_CHAR - '0';
 
             int currentPlayerHandSize = (currentPlayerId == 1 ? P1HandSize : P2HandSize);
-            if (!isdigit(playNumChar) || index >= currentPlayerHandSize || index < 0)
+            if (!isdigit(PLAY_NUM_CHAR) || index >= currentPlayerHandSize || index < 0)
             {
                 std::cout << "Invalid card index" << std::endl;
                 continue;
@@ -402,10 +402,10 @@ int main()
                 }
                 else
                 { // Both cards are non-trump
-                    const char *dominantSuit = getSuit(firstPlayedPlayerId == 1 ? firstCard : secondCard);
+                    const char *DOMINANT_SUIT = getSuit(firstPlayedPlayerId == 1 ? firstCard : secondCard);
                     // Dominant suit is the first played card's suit
 
-                    if (std::strcmp(getSuit(secondCard), dominantSuit) != 0)
+                    if (std::strcmp(getSuit(secondCard), DOMINANT_SUIT) != 0)
                     { // If second card's suit doesn't match the first one
                         P1WinsTrick = (firstPlayedPlayerId == 1);
                         // If P1 played first, he wins the trick

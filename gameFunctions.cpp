@@ -32,17 +32,17 @@ bool isTrump(const Card &card, const char *trumpSuit)
 void initializeDeck(Card deck[DECK_MAX_SIZE], int &deckSize)
 {
 
-    const char *suits[] = {"♣", "♦", "♥", "♠"};
-    const char *ranks[] = {"9", "J", "Q", "K", "10", "A"};
+    const char *SUITS[] = {"♣", "♦", "♥", "♠"};
+    const char *RANKS[] = {"9", "J", "Q", "K", "10", "A"};
 
     int idx = 0;
     for (int j = 0; j < 4; ++j)
     {
         for (int i = 0; i < 6; ++i)
         {
-            std::strncpy(deck[idx].suit, suits[j], SUIT_MAX_LENGTH);
+            std::strncpy(deck[idx].suit, SUITS[j], SUIT_MAX_LENGTH);
             deck[idx].suit[SUIT_MAX_LENGTH - 1] = '\0';
-            std::strncpy(deck[idx].rank, ranks[i], RANK_MAX_LENGTH);
+            std::strncpy(deck[idx].rank, RANKS[i], RANK_MAX_LENGTH);
             deck[idx].rank[RANK_MAX_LENGTH - 1] = '\0';
             // compute values
             deck[idx].suitValue = getSuitValue(deck[idx]);
@@ -106,7 +106,7 @@ void revealTrump(Card deck[DECK_MAX_SIZE], char *trumpSuit)
 
 int getSuitValue(const Card &card)
 {
-    const char *suit_to_find = card.suit;
+    const char *SUIT_TO_FIND = card.suit;
 
     // Loop for 4 suits
     for (int i = 0; i < 4; ++i)
@@ -115,7 +115,7 @@ int getSuitValue(const Card &card)
         std::strncpy(currentSuitChar, &SUIT_CHARS[i * 3], 3);
         currentSuitChar[3] = '\0'; // Ensure null termination
 
-        if (std::strcmp(currentSuitChar, suit_to_find) == 0)
+        if (std::strcmp(currentSuitChar, SUIT_TO_FIND) == 0)
         {
             return SUIT_VALUES[i];
         }
@@ -127,11 +127,11 @@ int getRankValue(const Card &card)
 {
     char rankCharToFind = card.rank[0];
 
-    const char *foundPtr = std::strchr(RANK_CHARS, rankCharToFind);
+    const char *FOUND_PTR = std::strchr(RANK_CHARS, rankCharToFind);
 
-    if (foundPtr != nullptr)
+    if (FOUND_PTR != nullptr)
     {
-        return RANK_VALUES[foundPtr - RANK_CHARS];
+        return RANK_VALUES[FOUND_PTR - RANK_CHARS];
     }
     return -1; // Rank not found or invalid
 }
@@ -210,14 +210,14 @@ int dealCard(Card deck[DECK_MAX_SIZE], Card PHand[], int &deckSize, int &handSiz
 
 void printSuitColored(const char *suit)
 {
-    const char *colorCode = (std::strcmp(suit, "♥") == 0 || std::strcmp(suit, "♦") == 0) ? COLOR_RED : COLOR_BLACK;
-    std::cout << colorCode << suit << COLOR_RESET;
+    const char *COLOR_CODE = (std::strcmp(suit, "♥") == 0 || std::strcmp(suit, "♦") == 0) ? COLOR_RED : COLOR_BLACK;
+    std::cout << COLOR_CODE << suit << COLOR_RESET;
 }
 
 void cardPrint(const Card &card)
 {
-    const char *colorCode = (card.suitValue == 3 || card.suitValue == 2) ? COLOR_RED : COLOR_BLACK;
-    std::cout << card.rank << colorCode << getSuit(card) << COLOR_RESET;
+    const char *COLOR_CODE = (card.suitValue == 3 || card.suitValue == 2) ? COLOR_RED : COLOR_BLACK;
+    std::cout << card.rank << COLOR_CODE << getSuit(card) << COLOR_RESET;
 }
 
 void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size)
@@ -235,7 +235,7 @@ void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size)
 }
 
 bool isValidPlayWhenClosed(const Card* playerHand, int playerHandSize, const Card& opponentCard, const char* trumpSuit, int playedIndex) {
-    const char *opponentSuit = getSuit(opponentCard);
+    const char *OPPONENT_SUIT = getSuit(opponentCard);
     
     int validIndexes[HAND_MAX_SIZE]; // Use HAND_MAX_SIZE or a dynamically allocated array
     int countOfValidIndexes = 0;
@@ -244,7 +244,7 @@ bool isValidPlayWhenClosed(const Card* playerHand, int playerHandSize, const Car
     bool handMatchingOpponentSuit[HAND_MAX_SIZE] = {false};
 
     for (int i = 0; i < playerHandSize; i++) {
-        if (strcmp(opponentSuit, getSuit(playerHand[i])) == 0) {
+        if (strcmp(OPPONENT_SUIT, getSuit(playerHand[i])) == 0) {
             handMatchingOpponentSuit[i] = true;
             playerHasMatchingOpponentSuit = true;
         }
