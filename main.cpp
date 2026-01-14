@@ -430,6 +430,41 @@ int main()
         }
         else if (strcmp(firstCommWord, "switch-nine") == 0)
         {
+            Card nine_Trump;
+            std::strncpy(nine_Trump.suit, trumpSuit, SUIT_MAX_LENGTH);
+            nine_Trump.suit[SUIT_MAX_LENGTH - 1] = '\0';
+            std::strncpy(nine_Trump.rank, "9", RANK_MAX_LENGTH);
+            nine_Trump.rank[RANK_MAX_LENGTH - 1] = '\0';
+            // compute values
+            nine_Trump.suitValue = getSuitValue(nine_Trump);
+            nine_Trump.rankValue = getRankValue(nine_Trump);
+
+            bool foundNineOfTrump = false;
+
+            for (int i = 0; i < (currentPlayerId == 1 ? P1HandSize : P2HandSize); i++)
+            {
+                Card& currentCard = (currentPlayerId == 1 ? P1Hand[i] : P2Hand[i]);
+                if (strcmp(currentCard.suit, nine_Trump.suit) == 0 &&
+                    strcmp(currentCard.rank, nine_Trump.rank) == 0)
+                {
+                    foundNineOfTrump = true;
+
+                    // Swapping the player's 9 of trump with the bottom deck card
+                    Card tempCardInHand = currentCard;
+                    currentCard = deck[0];
+                    deck[0] = tempCardInHand;
+
+                    std::cout << "Successfully switched 9 of trump with the bottom card." << std::endl;
+
+                    std::sort((currentPlayerId == 1 ? P1Hand : P2Hand), (currentPlayerId == 1 ? P1Hand + P1HandSize : P2Hand + P2HandSize), compareCards);
+
+                    break;
+                }
+            }
+            if (!foundNineOfTrump)
+            {
+                std::cout << "Player " << (currentPlayerId == 1 ? "1" : "2") << " doesn't have the 9 of trump!" << std::endl;
+            }
         }
 
         else if (strcmp(firstCommWord, "marriage") == 0)
