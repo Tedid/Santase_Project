@@ -32,10 +32,6 @@ constexpr int DEFAULT_TRUMP_MARRIAGE = 40;
 constexpr bool DEFAULT_ARE_POINTS_VISIBLE = true;
 constexpr bool DEFAULT_LAST_TRICK_BONUS = true;
 
-// constexpr size_t MAX_STR_LEN = 1024;
-
-// constexpr int DECK_MAX_SIZE = 24;
-// constexpr int HAND_MAX_SIZE = 6;
 constexpr int THROWN_CARDS_MAX_NUMBER = 2;
 constexpr int NUMBER_OF_RANKS = 6;
 
