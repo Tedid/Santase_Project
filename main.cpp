@@ -102,9 +102,11 @@ int main()
             printSuitColored(trumpSuit);
             std::cout << std::endl;
             if (deckSize > 0)
+            {
                 std::cout << "Bottom card: ";
-            cardPrint(deck[0]);
-            std::cout << std::endl;
+                cardPrint(deck[0]);
+                std::cout << std::endl;
+            }
             std::cout << "Cards left in deck: " << deckSize << std::endl;
             std::cout << std::endl;
         }
@@ -457,7 +459,8 @@ int main()
                     }
 
                     // Check if the deck is now empty and close the stock
-                    if (deckSize == 0) {
+                    if (deckSize == 0)
+                    {
                         isStockClosed = true;
                         std::cout << "Deck is empty. Stock closed. Strict rules are now in effect." << std::endl;
                     }
