@@ -233,6 +233,29 @@ void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size)
     std::cout << " ]";
 }
 
+void printHistory(const GameHistory &game)
+{
+    for (int i = 0; i < game.totalRounds; i++)
+    {
+        const RoundHistory &round = game.history[i];
+
+        std::cout << "Round " << round.roundNumber << ": ";
+
+        if (round.isOngoing)
+        {
+            std::cout << "Ongoing" << std::endl;
+        }
+        else
+        {
+            std::cout << "Winner - Player " << round.winnerId
+                      << " (+" << round.gamePointsWon << ") | "
+                      << "Player 1: " << round.p1Score << " points | "
+                      << "Player 2: " << round.p2Score << " points" << std::endl;
+        }
+    }
+    std::cout << "Overall: Player 1 - " << game.overallP1 << " | Player 2 - " << game.overallP2 << std::endl;
+}
+
 bool isValidPlayWhenClosed(const Card *playerHand, int playerHandSize, const Card &opponentCard, const char *trumpSuit, int playedIndex)
 {
     const char *OPPONENT_SUIT = getSuit(opponentCard);
@@ -348,11 +371,14 @@ bool processPlayerCardPlay(Card playerHand[], int &playerHandSize, Card thrownCa
     return true;
 }
 
-int roundEnd(bool manualStopCall, int lastTrickWinnerId, int P1RoundPoints, int P2RoundPoints, bool P1hasWonCard, bool P2hasWonCard, int &P1GamePoints, int &P2GamePoints){
+int roundEnd(bool manualStopCall, int lastTrickWinnerId, int P1RoundPoints, int P2RoundPoints, bool P1hasWonCard, bool P2hasWonCard, int &P1GamePoints, int &P2GamePoints)
+{
     if (!manualStopCall)
     {
-        if (lastTrickWinnerId == 1) P1RoundPoints += 10;
-        else if (lastTrickWinnerId == 2) P2RoundPoints += 10;
+        if (lastTrickWinnerId == 1)
+            P1RoundPoints += 10;
+        else if (lastTrickWinnerId == 2)
+            P2RoundPoints += 10;
         std::cout << "Last trick bonus applied (10 points)." << std::endl;
     }
 
@@ -368,28 +394,34 @@ int roundEnd(bool manualStopCall, int lastTrickWinnerId, int P1RoundPoints, int 
     int winnerScore, loserScore;
     bool loserHadWonAnyCards;
 
-    if (lastTrickWinnerId == 1) 
+    if (lastTrickWinnerId == 1)
     {
-        if (P1RoundPoints >= 66) { 
+        if (P1RoundPoints >= 66)
+        {
             roundWinnerID = 1;
             winnerScore = P1RoundPoints;
             loserScore = P2RoundPoints;
             loserHadWonAnyCards = P2hasWonCard;
-        } else { 
+        }
+        else
+        {
             roundWinnerID = 2;
             winnerScore = P2RoundPoints;
             loserScore = P1RoundPoints;
             loserHadWonAnyCards = P1hasWonCard;
         }
     }
-    else 
+    else
     {
-        if (P2RoundPoints >= 66) {
+        if (P2RoundPoints >= 66)
+        {
             roundWinnerID = 2;
             winnerScore = P2RoundPoints;
             loserScore = P1RoundPoints;
             loserHadWonAnyCards = P1hasWonCard;
-        } else { 
+        }
+        else
+        {
             roundWinnerID = 1;
             winnerScore = P1RoundPoints;
             loserScore = P2RoundPoints;
@@ -397,15 +429,15 @@ int roundEnd(bool manualStopCall, int lastTrickWinnerId, int P1RoundPoints, int 
         }
     }
 
-    if (!loserHadWonAnyCards) 
+    if (!loserHadWonAnyCards)
     {
         wonPoints = 3;
     }
-    else if (loserScore <= 32) 
+    else if (loserScore <= 32)
     {
         wonPoints = 2;
     }
-    else 
+    else
     {
         wonPoints = 1;
     }

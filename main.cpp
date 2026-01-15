@@ -24,7 +24,6 @@
 
 #include "utils.hpp"
 #include "gameFunctions.hpp"
-#include "cardStruct.hpp"
 
 constexpr int DEFAULT_REQUIRED_POINTS_TO_WIN = 11;
 constexpr int DEFAULT_NON_TRUMP_MARRIAGE = 20;
@@ -68,6 +67,8 @@ int main()
 
     Card lastTrickCards[THROWN_CARDS_MAX_NUMBER];
     int lastTrickWinnerId = 0;
+
+    GameHistory history;
 
     // REMINDER FOR ME TO ADD COLOURING TO TRUMP CARDS
 
@@ -782,6 +783,7 @@ int main()
         }
         else if (strcmp(firstCommWord, "history") == 0)
         {
+            printHistory(history);
         }
         else if (strcmp(firstCommWord, "status") == 0)
         {

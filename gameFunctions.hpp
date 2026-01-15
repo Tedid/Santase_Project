@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "cardStruct.hpp"
+#include "history.hpp"
 
 constexpr int DECK_MAX_SIZE = 24;
 constexpr int HAND_MAX_SIZE = 6;
@@ -24,6 +25,7 @@ int dealCard(Card deck[DECK_MAX_SIZE], Card PHand[], int &deckSize, int &handSiz
 void printSuitColored(const char *suit);
 void cardPrint(const Card &card);
 void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size);
+void printHistory(const GameHistory &history);
 
 bool isValidPlayWhenClosed(const Card *playerHand, int playerHandSize, const Card &opponentCard, const char *trumpSuit, int playedIndex);
 bool processPlayerCardPlay(Card playerHand[], int &playerHandSize, Card thrownCards[], int &thrownCount, const char trumpSuit[], int cardIndex, int playerId, bool isRoundClosed);
