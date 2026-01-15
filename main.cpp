@@ -522,11 +522,11 @@ int main()
                 int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2Gamepoints);
 
                 // Check for game winner
-                if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin) {
+                if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin)
+                {
                     gameOver = true;
-                    // Additional game end logic can go here (e.g., announcing overall winner)
                     std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
-                    break; 
+                    break;
                 }
 
                 P1RoundPoints = 0;
@@ -541,7 +541,7 @@ int main()
                 distributeCards(deck, P1Hand, P2Hand, deckSize);
                 P1HandSize = HAND_MAX_SIZE;
                 P2HandSize = HAND_MAX_SIZE;
-                revealTrump(deck, deckSize, trumpSuit); 
+                revealTrump(deck, deckSize, trumpSuit);
                 currentPlayerId = roundWinnerId; // Winner of previous round starts the new one
             }
         }
@@ -827,32 +827,60 @@ int main()
             if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin)
             {
                 gameOver = true;
-                // Additional game end logic can go here (e.g., announcing overall winner)
                 std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
                 break;
             }
 
-                P1RoundPoints = 0;
-                P2RoundPoints = 0;
-                P1hasWonCard = false;
-                P2hasWonCard = false;
-                isStockClosed = false;
-                isMarriageDeclaredAndCardMustBePlayed = false;
-                lastTrickWinnerId = 0;
+            P1RoundPoints = 0;
+            P2RoundPoints = 0;
+            P1hasWonCard = false;
+            P2hasWonCard = false;
+            isStockClosed = false;
+            isMarriageDeclaredAndCardMustBePlayed = false;
+            lastTrickWinnerId = 0;
 
-                initializeDeck(deck, deckSize); // Shuffle for next round
-                distributeCards(deck, P1Hand, P2Hand, deckSize);
-                P1HandSize = HAND_MAX_SIZE;
-                P2HandSize = HAND_MAX_SIZE;
-                revealTrump(deck, deckSize, trumpSuit); // Reveal new trump
-                currentPlayerId = roundWinnerId; // Winner of the previous round starts the new one
-
+            initializeDeck(deck, deckSize);
+            distributeCards(deck, P1Hand, P2Hand, deckSize);
+            P1HandSize = HAND_MAX_SIZE;
+            P2HandSize = HAND_MAX_SIZE;
+            revealTrump(deck, deckSize, trumpSuit);
+            currentPlayerId = roundWinnerId; // Winner of the previous round starts the new one
         }
         else if (strcmp(firstCommWord, "surrender") == 0)
         {
+            (currentPlayerId == 1 ? P2RoundPoints : P1RoundPoints) = 666; // A very big number to ensure opponent wins
+
+            manualStopCall = true;
+            int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2Gamepoints);
+
+            // Check for game winner
+            if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin)
+            {
+                gameOver = true;
+                std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
+                break;
+            }
+
+            P1RoundPoints = 0;
+            P2RoundPoints = 0;
+            P1hasWonCard = false;
+            P2hasWonCard = false;
+            isStockClosed = false;
+            isMarriageDeclaredAndCardMustBePlayed = false;
+            lastTrickWinnerId = 0;
+
+            initializeDeck(deck, deckSize);
+            distributeCards(deck, P1Hand, P2Hand, deckSize);
+            P1HandSize = HAND_MAX_SIZE;
+            P2HandSize = HAND_MAX_SIZE;
+            revealTrump(deck, deckSize, trumpSuit);
+            currentPlayerId = roundWinnerId; // Winner of the previous round starts the new one
         }
         else if (strcmp(firstCommWord, "surrender-forever") == 0)
         {
+            gameOver = true;
+            std::cout << "Game Over! Player " << (currentPlayerId == 1 ? "2" : "1") << " wins the match!" << std::endl;
+            break;
         }
         else if (strcmp(firstCommWord, "save") == 0)
         {
