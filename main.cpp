@@ -862,7 +862,6 @@ int main()
         }
         else
         {
-            // std::cout << "\033[2J\033[H";
             std::cout << "Unknown command. Please try again." << std::endl;
             continue;
         }
