@@ -848,39 +848,48 @@ int main()
         }
         else if (strcmp(firstCommWord, "surrender") == 0)
         {
-            (currentPlayerId == 1 ? P2RoundPoints : P1RoundPoints) = 666; // A very big number to ensure opponent wins
-
-            manualStopCall = true;
-            int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2Gamepoints);
-
-            // Check for game winner
-            if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin)
+            const char *PROMPT = "Are you sure you want to surrender for the round?";
+            if (getConfirmation(PROMPT))
             {
-                gameOver = true;
-                std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
-                break;
+
+                (currentPlayerId == 1 ? P2RoundPoints : P1RoundPoints) = 666; // A very big number to ensure opponent wins
+
+                manualStopCall = true;
+                int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2Gamepoints);
+
+                // Check for game winner
+                if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin)
+                {
+                    gameOver = true;
+                    std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
+                    break;
+                }
+
+                P1RoundPoints = 0;
+                P2RoundPoints = 0;
+                P1hasWonCard = false;
+                P2hasWonCard = false;
+                isStockClosed = false;
+                isMarriageDeclaredAndCardMustBePlayed = false;
+                lastTrickWinnerId = 0;
+
+                initializeDeck(deck, deckSize);
+                distributeCards(deck, P1Hand, P2Hand, deckSize);
+                P1HandSize = HAND_MAX_SIZE;
+                P2HandSize = HAND_MAX_SIZE;
+                revealTrump(deck, deckSize, trumpSuit);
+                currentPlayerId = roundWinnerId; // Winner of the previous round starts the new one
             }
-
-            P1RoundPoints = 0;
-            P2RoundPoints = 0;
-            P1hasWonCard = false;
-            P2hasWonCard = false;
-            isStockClosed = false;
-            isMarriageDeclaredAndCardMustBePlayed = false;
-            lastTrickWinnerId = 0;
-
-            initializeDeck(deck, deckSize);
-            distributeCards(deck, P1Hand, P2Hand, deckSize);
-            P1HandSize = HAND_MAX_SIZE;
-            P2HandSize = HAND_MAX_SIZE;
-            revealTrump(deck, deckSize, trumpSuit);
-            currentPlayerId = roundWinnerId; // Winner of the previous round starts the new one
         }
         else if (strcmp(firstCommWord, "surrender-forever") == 0)
         {
-            gameOver = true;
-            std::cout << "Game Over! Player " << (currentPlayerId == 1 ? "2" : "1") << " wins the match!" << std::endl;
-            break;
+            const char *PROMPT = "Are you sure you want to surrender for the whole game?";
+            if (getConfirmation(PROMPT))
+            {
+                gameOver = true;
+                std::cout << "Game Over! Player " << (currentPlayerId == 1 ? "2" : "1") << " wins the match!" << std::endl;
+                break;
+            }
         }
         else if (strcmp(firstCommWord, "save") == 0)
         {
