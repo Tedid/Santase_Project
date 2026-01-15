@@ -64,6 +64,7 @@ int main()
     bool isStockClosed = false;
     char declaredMarriageSuit[SUIT_MAX_LENGTH];         // Stores the suit of the last declared marriage
     bool isMarriageDeclaredAndCardMustBePlayed = false; // True if a marriage was declared and one of its cards must be played
+    bool manualStopCall = false;
 
     Card lastTrickCards[THROWN_CARDS_MAX_NUMBER];
     int lastTrickWinnerId = 0;
@@ -90,7 +91,8 @@ int main()
         {
             std::cout << "P" << currentPlayerId << "'s turn:";
 
-            if(arePointsVisible){
+            if (arePointsVisible)
+            {
                 std::cout << "\t\t(" << (currentPlayerId == 1 ? P1RoundPoints : P2RoundPoints) << " points)";
             }
 
@@ -462,7 +464,8 @@ int main()
 
                 std::cout << (P1WinsTrick ? "P1" : "P2") << " wins the trick! ";
 
-                if(wonPoints>0){
+                if (wonPoints > 0)
+                {
                     std::cout << "(+" << wonPoints << " points)" << std::endl;
                 }
 
@@ -510,6 +513,36 @@ int main()
                 }
 
                 thrownCount = 0;
+            }
+
+            // ROUND END
+            if (P1HandSize == 0 && P2HandSize == 0)
+            {
+                manualStopCall = false;
+                int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2Gamepoints);
+
+                // Check for game winner
+                if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin) {
+                    gameOver = true;
+                    // Additional game end logic can go here (e.g., announcing overall winner)
+                    std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
+                    break; 
+                }
+
+                P1RoundPoints = 0;
+                P2RoundPoints = 0;
+                P1hasWonCard = false;
+                P2hasWonCard = false;
+                isStockClosed = false;
+                isMarriageDeclaredAndCardMustBePlayed = false;
+                lastTrickWinnerId = 0;
+
+                initializeDeck(deck, deckSize); // Shuffle for next round
+                distributeCards(deck, P1Hand, P2Hand, deckSize);
+                P1HandSize = HAND_MAX_SIZE;
+                P2HandSize = HAND_MAX_SIZE;
+                revealTrump(deck, deckSize, trumpSuit); 
+                currentPlayerId = roundWinnerId; // Winner of previous round starts the new one
             }
         }
         else if (strcmp(firstCommWord, "switch-nine") == 0)
@@ -787,6 +820,33 @@ int main()
         }
         else if (strcmp(firstCommWord, "stop") == 0)
         {
+            manualStopCall = true;
+            int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2Gamepoints);
+
+            // Check for game winner
+            if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin)
+            {
+                gameOver = true;
+                // Additional game end logic can go here (e.g., announcing overall winner)
+                std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
+                break;
+            }
+
+                P1RoundPoints = 0;
+                P2RoundPoints = 0;
+                P1hasWonCard = false;
+                P2hasWonCard = false;
+                isStockClosed = false;
+                isMarriageDeclaredAndCardMustBePlayed = false;
+                lastTrickWinnerId = 0;
+
+                initializeDeck(deck, deckSize); // Shuffle for next round
+                distributeCards(deck, P1Hand, P2Hand, deckSize);
+                P1HandSize = HAND_MAX_SIZE;
+                P2HandSize = HAND_MAX_SIZE;
+                revealTrump(deck, deckSize, trumpSuit); // Reveal new trump
+                currentPlayerId = roundWinnerId; // Winner of the previous round starts the new one
+
         }
         else if (strcmp(firstCommWord, "surrender") == 0)
         {

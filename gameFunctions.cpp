@@ -86,7 +86,7 @@ void distributeCards(Card deck[DECK_MAX_SIZE], Card P1[], Card P2[], int &deckSi
     std::sort(P2, P2 + HAND_MAX_SIZE, compareCards);
 }
 
-void revealTrump(Card deck[DECK_MAX_SIZE], int deckSize, char *trumpSuit)
+void revealTrump(Card deck[DECK_MAX_SIZE], int &deckSize, char *trumpSuit)
 {
     Card &topCard = deck[deckSize - 1];
     // shift up by one
@@ -346,4 +346,82 @@ bool processPlayerCardPlay(Card playerHand[], int &playerHandSize, Card thrownCa
     }
     --playerHandSize;
     return true;
+}
+
+int roundEnd(bool manualStopCall, int lastTrickWinnerId, int P1RoundPoints, int P2RoundPoints, bool P1hasWonCard, bool P2hasWonCard, int &P1GamePoints, int &P2GamePoints){
+    if (!manualStopCall)
+    {
+        if (lastTrickWinnerId == 1) P1RoundPoints += 10;
+        else if (lastTrickWinnerId == 2) P2RoundPoints += 10;
+        std::cout << "Last trick bonus applied (10 points)." << std::endl;
+    }
+
+    int wonPoints;
+    int roundWinnerID;
+
+    if (P1RoundPoints == P2RoundPoints)
+    {
+        std::cout << "Both players have the same number of points (" << P1RoundPoints << "). It's a draw for the round! No game points awarded." << std::endl;
+        return lastTrickWinnerId;
+    }
+
+    int winnerScore, loserScore;
+    bool loserHadWonAnyCards;
+
+    if (lastTrickWinnerId == 1) 
+    {
+        if (P1RoundPoints >= 66) { 
+            roundWinnerID = 1;
+            winnerScore = P1RoundPoints;
+            loserScore = P2RoundPoints;
+            loserHadWonAnyCards = P2hasWonCard;
+        } else { 
+            roundWinnerID = 2;
+            winnerScore = P2RoundPoints;
+            loserScore = P1RoundPoints;
+            loserHadWonAnyCards = P1hasWonCard;
+        }
+    }
+    else 
+    {
+        if (P2RoundPoints >= 66) {
+            roundWinnerID = 2;
+            winnerScore = P2RoundPoints;
+            loserScore = P1RoundPoints;
+            loserHadWonAnyCards = P1hasWonCard;
+        } else { 
+            roundWinnerID = 1;
+            winnerScore = P1RoundPoints;
+            loserScore = P2RoundPoints;
+            loserHadWonAnyCards = P2hasWonCard;
+        }
+    }
+
+    if (!loserHadWonAnyCards) 
+    {
+        wonPoints = 3;
+    }
+    else if (loserScore <= 32) 
+    {
+        wonPoints = 2;
+    }
+    else 
+    {
+        wonPoints = 1;
+    }
+
+    // Update overall game points
+    if (roundWinnerID == 1)
+    {
+        P1GamePoints += wonPoints;
+    }
+    else
+    {
+        P2GamePoints += wonPoints;
+    }
+
+    std::cout << "Player " << roundWinnerID << " wins the round! (+" << wonPoints << " game points)" << std::endl;
+    std::cout << "Player 1 - " << P1RoundPoints << ", P2 - " << P2RoundPoints << std::endl;
+
+    return roundWinnerID;
 }
