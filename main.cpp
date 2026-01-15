@@ -867,11 +867,5 @@ int main()
         }
 
         std::cout << std::endl;
-
-        // bool roundOver = false;
-
-        // while (!roundOver) // Hand start
-        // {
-        // }
     }
 }
