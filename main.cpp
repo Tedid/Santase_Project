@@ -785,7 +785,8 @@ int main()
         }
         else if (strcmp(firstCommWord, "trump") == 0)
         {
-            std::cout << "Trump suit: ";
+            printYellowWordTrump();
+            std::cout << " suit: ";
             printSuitColored(trumpSuit);
             std::cout << std::endl;
         }
@@ -806,7 +807,8 @@ int main()
             std::cout << "Player 1 Round Points: " << P1RoundPoints << std::endl;
             std::cout << "Player 2 Round Points: " << P2RoundPoints << std::endl;
             std::cout << "Current Player: P" << currentPlayerId << std::endl;
-            std::cout << "Trump Suit: ";
+            printYellowWordTrump();
+            std::cout << " Suit: ";
             printSuitColored(trumpSuit);
             std::cout << std::endl;
             std::cout << "Cards left in deck: " << deckSize << std::endl;
