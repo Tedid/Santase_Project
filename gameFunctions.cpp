@@ -2,6 +2,7 @@
 
 const char *COLOR_RED = "\033[31m";
 const char *COLOR_BLACK = "\033[30m";
+const char *COLOR_YELLOW = "\033[33m";
 const char *COLOR_RESET = "\033[0m";
 
 const char *HEARTS = "♥";
@@ -228,14 +229,32 @@ void printSuitColored(const char *suit)
     std::cout << COLOR_CODE << suit << COLOR_RESET;
 }
 
-void printCardIndexes(int handSize)
+void printYellowWordTrump()
+{
+    std::cout << COLOR_YELLOW << "Trump" << COLOR_RESET;
+}
+
+void printCardIndexes(Card hand[HAND_MAX_SIZE], int handSize, const char *trumpSuit)
 {
     if (handSize > 0)
     {
-        std::cout << "        "; // 8x spaces
+        std::cout << "       "; // 7x spaces
         for (int i = 0; i < handSize; i++)
         {
-            std::cout << "[" << i << "] ";
+            if (strcmp(hand[i].rank, "10") == 0)
+            {
+                // adding one more space for the 10s
+                std::cout << " ";
+            }
+
+            if (isTrump(hand[i], trumpSuit))
+            {
+                std::cout << COLOR_YELLOW << "[" << i << "] " << COLOR_RESET;
+            }
+            else
+            {
+                std::cout << "[" << i << "] ";
+            }
         }
         std::cout << std::endl;
     }

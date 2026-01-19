@@ -59,16 +59,14 @@ int main()
     int currentPlayerId = 1; // 1 for P1, 2 for P2
     int lastRoundWonPlayerId = 1;
     bool isStockClosed = false;
-    char declaredMarriageSuit[SUIT_MAX_LENGTH];         // Stores the suit of the last declared marriage
-    bool isMarriageDeclaredAndCardMustBePlayed = false; // True if a marriage was declared and one of its cards must be played
+    char declaredMarriageSuit[SUIT_MAX_LENGTH];         
+    bool isMarriageDeclaredAndCardMustBePlayed = false; 
     bool manualStopCall = false;
 
     Card lastTrickCards[THROWN_CARDS_MAX_NUMBER];
     int lastTrickWinnerId = 0;
 
     GameHistory history;
-
-    // REMINDER FOR ME TO ADD COLOURING TO TRUMP CARDS
 
     //---- Editable through settings ----
     int requiredPointsToWin = DEFAULT_REQUIRED_POINTS_TO_WIN;
@@ -98,7 +96,7 @@ int main()
             std::cout << std::endl;
             if (currentPlayerId == 1)
             {
-                printCardIndexes(P1HandSize);
+                printCardIndexes(P1Hand, P1HandSize, trumpSuit);
 
                 std::cout << "Hand: ";
                 printPlayerHand(P1Hand, P1HandSize);
@@ -106,14 +104,15 @@ int main()
             }
             else
             {
-                printCardIndexes(P2HandSize);
+                printCardIndexes(P2Hand, P2HandSize, trumpSuit);
                 
                 std::cout << "Hand: ";
                 printPlayerHand(P2Hand, P2HandSize);
                 std::cout << std::endl;
             }
 
-            std::cout << "Trump suit: ";
+            printYellowWordTrump();
+            std::cout << " suit: ";
             printSuitColored(trumpSuit);
             std::cout << std::endl;
             if (deckSize > 0)

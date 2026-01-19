@@ -24,7 +24,8 @@ void printRulesString(const int requiredPointsToWin, const int nonTrumpMarriage,
 const char *getSuit(const Card &card);
 int dealCard(Card deck[DECK_MAX_SIZE], Card PHand[], int &deckSize, int &handSize);
 void printSuitColored(const char *suit);
-void printCardIndexes(int handSize);
+void printYellowWordTrump();
+void printCardIndexes(Card hand[HAND_MAX_SIZE], int handSize, const char *trumpSuit);
 void cardPrint(const Card &card);
 void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size);
 void printHistory(const GameHistory &history);
