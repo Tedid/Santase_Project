@@ -14,7 +14,7 @@ constexpr int MAX_ROUNDS = 100;
 
 struct GameHistory
 {
-    RoundHistory history[MAX_ROUNDS];   
+    RoundHistory history[MAX_ROUNDS];
     int totalRounds = 0;
     int overallP1 = 0;
     int overallP2 = 0;

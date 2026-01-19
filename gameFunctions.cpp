@@ -176,11 +176,11 @@ void printRulesString(const int requiredPointsToWin, const int nonTrumpMarriage,
     std::cout << "* Each player gets 6 cards. The trump suit is the suit of the next card in the deck.\n";
     std::cout << "This card gets put below the deck.\n";
     std::cout << "* Card values: A=11, 10=10, K=4, Q=3, J=2, 9=0.\n";
-    std::cout << "* A marriage (K+Q of the same suit) gives " + std::to_string(nonTrumpMarriage) + " points, or " + std::to_string(trumpMarriage) + " if of the trump suit.\n";
+    std::cout << "* A marriage (K+Q of the same suit) gives " << nonTrumpMarriage << " points, or " << trumpMarriage << " if of the trump suit.\n";
     std::cout << "* The winner of a trick leads next and draws a card from the stock.\n";
     std::cout << "* Players must follow suit and trump only after the stock has been closed.\n";
     std::cout << "* The first player to reach 66 points wins the round.\n";
-    std::cout << "* The game finishes when a player hits " + std::to_string(requiredPointsToWin) + " match points.\n";
+    std::cout << "* The game finishes when a player hits " << requiredPointsToWin << " match points.\n";
 }
 
 const char *getSuit(const Card &card)
@@ -225,12 +225,14 @@ int dealCard(Card deck[DECK_MAX_SIZE], Card PHand[], int &deckSize, int &handSiz
 
 void printSuitColored(const char *suit)
 {
+    // COLOR_RED and COLOR_BLACK are used here. Assumes they are externally declared
     const char *COLOR_CODE = (std::strcmp(suit, "♥") == 0 || std::strcmp(suit, "♦") == 0) ? COLOR_RED : COLOR_BLACK;
     std::cout << COLOR_CODE << suit << COLOR_RESET;
 }
 
 void printYellowWordTrump()
 {
+    // COLOR_YELLOW is used here. Assumes it's externally declared
     std::cout << COLOR_YELLOW << "Trump" << COLOR_RESET;
 }
 
@@ -247,6 +249,7 @@ void printCardIndexes(Card hand[HAND_MAX_SIZE], int handSize, const char *trumpS
                 std::cout << " ";
             }
 
+            // COLOR_YELLOW is used here. Assumes it's externally declared
             if (isTrump(hand[i], trumpSuit))
             {
                 std::cout << COLOR_YELLOW << "[" << i << "] " << COLOR_RESET;
@@ -262,6 +265,7 @@ void printCardIndexes(Card hand[HAND_MAX_SIZE], int handSize, const char *trumpS
 
 void cardPrint(const Card &card)
 {
+    // COLOR_RED and COLOR_BLACK are used here. Assumes they are externally declared
     const char *COLOR_CODE = (card.suitValue == 3 || card.suitValue == 2) ? COLOR_RED : COLOR_BLACK;
     std::cout << card.rank << COLOR_CODE << getSuit(card) << COLOR_RESET;
 }
@@ -557,4 +561,230 @@ void finalizeCurrentRoundHistory(GameHistory &game, int winnerId, int gamePoints
     {
         game.overallP2 += gamePointsWon;
     }
+}
+
+bool saveGameState(const char *filename,
+                   bool hasGameStarted, bool wereSettingsModified, const char trumpSuit[SUIT_MAX_LENGTH],
+                   const Card deck[DECK_MAX_SIZE], int deckSize, int currentRoundNumber,
+                   const Card P1Hand[HAND_MAX_SIZE], int P1HandSize, const Card P2Hand[HAND_MAX_SIZE], int P2HandSize,
+                   const Card thrownCards[THROWN_CARDS_MAX_NUMBER], int thrownCount, int firstPlayedPlayerId,
+                   int P1GamePoints, int P2GamePoints, bool P1hasWonCard, bool P2hasWonCard,
+                   int P1RoundPoints, int P2RoundPoints, int currentPlayerId, int lastRoundWonPlayerId,
+                   bool isStockClosed, const char declaredMarriageSuit[SUIT_MAX_LENGTH], bool isMarriageDeclaredAndCardMustBePlayed,
+                   bool manualStopCall, const Card lastTrickCards[THROWN_CARDS_MAX_NUMBER], int lastTrickWinnerId,
+                   const GameHistory &history, int requiredPointsToWin, int nonTrumpMarriage,
+                   int trumpMarriage, bool arePointsVisible, bool lastTrickBonus)
+{
+    std::ofstream outFile(filename); // fstream can take const char* directly
+    if (!outFile.is_open())
+    {
+        std::cerr << "Error: Could not open file for saving: " << filename << std::endl;
+        return false; // Return false on error
+    }
+
+    // Save simple boolean and int variables
+    outFile << hasGameStarted << "\n";
+    outFile << wereSettingsModified << "\n";
+    outFile << trumpSuit << "\n";
+
+    // Save deck
+    outFile << deckSize << "\n";
+    for (int i = 0; i < deckSize; ++i)
+    {
+        outFile << deck[i].rank << " " << deck[i].suit << "\n";
+    }
+
+    outFile << currentRoundNumber << "\n";
+
+    // Save P1Hand
+    outFile << P1HandSize << "\n";
+    for (int i = 0; i < P1HandSize; ++i)
+    {
+        outFile << P1Hand[i].rank << " " << P1Hand[i].suit << "\n";
+    }
+    // Save P2Hand
+    outFile << P2HandSize << "\n";
+    for (int i = 0; i < P2HandSize; ++i)
+    {
+        outFile << P2Hand[i].rank << " " << P2Hand[i].suit << "\n";
+    }
+
+    // Save thrownCards
+    outFile << thrownCount << "\n";
+    for (int i = 0; i < thrownCount; ++i)
+    {
+        outFile << thrownCards[i].rank << " " << thrownCards[i].suit << "\n";
+    }
+
+    outFile << firstPlayedPlayerId << "\n";
+    outFile << P1GamePoints << "\n";
+    outFile << P2GamePoints << "\n";
+    outFile << P1hasWonCard << "\n";
+    outFile << P2hasWonCard << "\n";
+    outFile << P1RoundPoints << "\n";
+    outFile << P2RoundPoints << "\n";
+    outFile << currentPlayerId << "\n";
+    outFile << lastRoundWonPlayerId << "\n";
+    outFile << isStockClosed << "\n";
+    outFile << declaredMarriageSuit << "\n";
+    outFile << isMarriageDeclaredAndCardMustBePlayed << "\n";
+    outFile << manualStopCall << "\n";
+
+    // Save lastTrickCards
+    // Always save 2 cards, even if not fully populated,
+    // as lastTrickWinnerId indicates if valid.
+    outFile << lastTrickCards[0].rank << " " << lastTrickCards[0].suit << "\n";
+    outFile << lastTrickCards[1].rank << " " << lastTrickCards[1].suit << "\n";
+    outFile << lastTrickWinnerId << "\n";
+    // Save GameHistory
+    outFile << history.totalRounds << "\n";
+    outFile << history.overallP1 << "\n";
+    outFile << history.overallP2 << "\n";
+    for (int i = 0; i < history.totalRounds; ++i)
+    {
+        outFile << history.history[i].roundNumber << "\n";
+        outFile << history.history[i].winnerId << "\n";
+        outFile << history.history[i].gamePointsWon << "\n";
+        outFile << history.history[i].p1Score << "\n";
+        outFile << history.history[i].p2Score << "\n";
+        outFile << history.history[i].isOngoing << "\n";
+    }
+
+    // Save settings
+    outFile << requiredPointsToWin << "\n";
+    outFile << nonTrumpMarriage << "\n";
+    outFile << trumpMarriage << "\n";
+    outFile << arePointsVisible << "\n";
+    outFile << lastTrickBonus << "\n";
+
+    outFile.close();
+    return true;
+}
+
+// Corrected load game state function (using const char* for filename)
+bool loadGameState(const char *filename,
+                   bool &hasGameStarted, bool &wereSettingsModified, char trumpSuit[SUIT_MAX_LENGTH],
+                   Card deck[DECK_MAX_SIZE], int &deckSize, int &currentRoundNumber,
+                   Card P1Hand[HAND_MAX_SIZE], int &P1HandSize, Card P2Hand[HAND_MAX_SIZE], int &P2HandSize,
+                   Card thrownCards[THROWN_CARDS_MAX_NUMBER], int &thrownCount, int &firstPlayedPlayerId,
+                   int &P1GamePoints, int &P2GamePoints, bool &P1hasWonCard, bool &P2hasWonCard,
+                   int &P1RoundPoints, int &P2RoundPoints, int &currentPlayerId, int &lastRoundWonPlayerId,
+                   bool &isStockClosed, char declaredMarriageSuit[SUIT_MAX_LENGTH], bool &isMarriageDeclaredAndCardMustBePlayed,
+                   bool &manualStopCall, Card lastTrickCards[THROWN_CARDS_MAX_NUMBER], int &lastTrickWinnerId,
+                   GameHistory &history, int &requiredPointsToWin, int &nonTrumpMarriage,
+                   int &trumpMarriage, bool &arePointsVisible, bool &lastTrickBonus)
+{
+    std::ifstream inFile(filename); // fstream can take const char* directly
+    if (!inFile.is_open())
+    {
+        std::cerr << "Error: Could not open file for loading: " << filename << std::endl;
+        return false; // Return false on error
+    }
+
+    // Load simple boolean and int variables
+    int boolVal; // Use int to read bools
+    inFile >> boolVal;
+    hasGameStarted = boolVal;
+    inFile >> boolVal;
+    wereSettingsModified = boolVal;
+    inFile >> trumpSuit; // Read char array directly
+
+    // Load deck
+    inFile >> deckSize;
+    for (int i = 0; i < deckSize; ++i)
+    {
+        inFile >> deck[i].rank >> deck[i].suit;
+        deck[i].suitValue = getSuitValue(deck[i]);
+        deck[i].rankValue = getRankValue(deck[i]);
+    }
+
+    inFile >> currentRoundNumber;
+
+    // Load P1Hand
+    inFile >> P1HandSize;
+    for (int i = 0; i < P1HandSize; ++i)
+    {
+        inFile >> P1Hand[i].rank >> P1Hand[i].suit;
+        P1Hand[i].suitValue = getSuitValue(P1Hand[i]);
+        P1Hand[i].rankValue = getRankValue(P1Hand[i]);
+    }
+    // Load P2Hand
+    inFile >> P2HandSize;
+    for (int i = 0; i < P2HandSize; ++i)
+    {
+        inFile >> P2Hand[i].rank >> P2Hand[i].suit;
+        P2Hand[i].suitValue = getSuitValue(P2Hand[i]);
+        P2Hand[i].rankValue = getRankValue(P2Hand[i]);
+    }
+
+    // Load thrownCards
+    inFile >> thrownCount;
+    for (int i = 0; i < thrownCount; ++i)
+    {
+        inFile >> thrownCards[i].rank >> thrownCards[i].suit;
+        thrownCards[i].suitValue = getSuitValue(thrownCards[i]);
+        thrownCards[i].rankValue = getRankValue(thrownCards[i]);
+    }
+
+    inFile >> firstPlayedPlayerId;
+    inFile >> P1GamePoints;
+    inFile >> P2GamePoints;
+    inFile >> boolVal;
+    P1hasWonCard = boolVal;
+    inFile >> boolVal;
+    P2hasWonCard = boolVal;
+    inFile >> P1RoundPoints;
+    inFile >> P2RoundPoints;
+    inFile >> currentPlayerId;
+    inFile >> lastRoundWonPlayerId;
+    inFile >> boolVal;
+    isStockClosed = boolVal;
+    inFile >> declaredMarriageSuit;
+    inFile >> boolVal;
+    isMarriageDeclaredAndCardMustBePlayed = boolVal;
+    inFile >> boolVal;
+    manualStopCall = boolVal;
+
+    // Load lastTrickCards
+    inFile >> lastTrickCards[0].rank >> lastTrickCards[0].suit;
+    lastTrickCards[0].suitValue = getSuitValue(lastTrickCards[0]);
+    lastTrickCards[0].rankValue = getRankValue(lastTrickCards[0]);
+    inFile >> lastTrickCards[1].rank >> lastTrickCards[1].suit;
+    lastTrickCards[1].suitValue = getSuitValue(lastTrickCards[1]);
+    lastTrickCards[1].rankValue = getRankValue(lastTrickCards[1]);
+    inFile >> lastTrickWinnerId;
+
+    // Load GameHistory
+    history.overallP1 = 0; // Reset cumulative scores as they are re-calculated from rounds
+    history.overallP2 = 0;
+    inFile >> history.totalRounds;
+    inFile >> history.overallP1; // Re-load overall scores
+    inFile >> history.overallP2;
+    for (int i = 0; i < history.totalRounds; ++i)
+    {
+        inFile >> history.history[i].roundNumber;
+        inFile >> history.history[i].winnerId;
+        inFile >> history.history[i].gamePointsWon;
+        inFile >> history.history[i].p1Score;
+        inFile >> history.history[i].p2Score;
+        inFile >> boolVal;
+        history.history[i].isOngoing = boolVal;
+    }
+
+    // Load settings
+    inFile >> requiredPointsToWin;
+    inFile >> nonTrumpMarriage;
+    inFile >> trumpMarriage;
+    inFile >> boolVal;
+    arePointsVisible = boolVal;
+    inFile >> boolVal;
+    lastTrickBonus = boolVal;
+
+    inFile.close();
+
+    // After loading, ensure hands are sorted
+    deckSort(P1Hand, P1HandSize);
+    deckSort(P2Hand, P2HandSize);
+
+    return true;
 }

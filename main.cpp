@@ -16,7 +16,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-// #include <fstream>
 
 #include "utils.hpp"
 #include "gameFunctions.hpp"
@@ -27,7 +26,6 @@ constexpr int DEFAULT_TRUMP_MARRIAGE = 40;
 constexpr bool DEFAULT_ARE_POINTS_VISIBLE = true;
 constexpr bool DEFAULT_LAST_TRICK_BONUS = true;
 
-constexpr int THROWN_CARDS_MAX_NUMBER = 2;
 constexpr int NUMBER_OF_RANKS = 6;
 
 int main()
@@ -59,8 +57,8 @@ int main()
     int currentPlayerId = 1; // 1 for P1, 2 for P2
     int lastRoundWonPlayerId = 1;
     bool isStockClosed = false;
-    char declaredMarriageSuit[SUIT_MAX_LENGTH];         
-    bool isMarriageDeclaredAndCardMustBePlayed = false; 
+    char declaredMarriageSuit[SUIT_MAX_LENGTH];
+    bool isMarriageDeclaredAndCardMustBePlayed = false;
     bool manualStopCall = false;
 
     Card lastTrickCards[THROWN_CARDS_MAX_NUMBER];
@@ -105,7 +103,7 @@ int main()
             else
             {
                 printCardIndexes(P2Hand, P2HandSize, trumpSuit);
-                
+
                 std::cout << "Hand: ";
                 printPlayerHand(P2Hand, P2HandSize);
                 std::cout << std::endl;
@@ -522,8 +520,9 @@ int main()
 
                 finalizeCurrentRoundHistory(history, roundWinnerId, wonPoints, P1RoundPoints, P2RoundPoints);
 
-                // Check for game winner
-                if (P1GamePoints >= requiredPointsToWin || P2GamePoints >= requiredPointsToWin)
+                // Check for game winner (only if game points actually exceed threshold)
+                if ((P1GamePoints >= requiredPointsToWin && P1GamePoints > preChangeP1GamePoints) ||
+                    (P2GamePoints >= requiredPointsToWin && P2GamePoints > preChangeP2GamePoints))
                 {
                     gameOver = true;
                     std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
@@ -904,9 +903,82 @@ int main()
         }
         else if (strcmp(firstCommWord, "save") == 0)
         {
+            // Parse filename from command: "save <name>"
+            char saveFileNameInput[MAX_STR_LEN];
+            char fullPath[MAX_STR_LEN + 5]; // +5 for ".txt\0"
+            if (spacePos + 1 < MAX_STR_LEN && fullComm[spacePos + 1] != '\0')
+            {
+                std::strncpy(saveFileNameInput, fullComm + spacePos + 1, MAX_STR_LEN - (spacePos + 1));
+                saveFileNameInput[MAX_STR_LEN - 1] = '\0'; // Ensure null termination
+
+                // Construct full path with .txt extension
+                std::strcpy(fullPath, saveFileNameInput);
+                std::strcat(fullPath, ".txt");
+
+                if (saveGameState(fullPath, // Pass char* filename
+                                  hasGameStarted, wereSettingsModified, trumpSuit,
+                                  deck, deckSize, currentRoundNumber,
+                                  P1Hand, P1HandSize, P2Hand, P2HandSize,
+                                  thrownCards, thrownCount, firstPlayedPlayerId,
+                                  P1GamePoints, P2GamePoints, P1hasWonCard, P2hasWonCard,
+                                  P1RoundPoints, P2RoundPoints, currentPlayerId, lastRoundWonPlayerId,
+                                  isStockClosed, declaredMarriageSuit, isMarriageDeclaredAndCardMustBePlayed,
+                                  manualStopCall, lastTrickCards, lastTrickWinnerId,
+                                  history, requiredPointsToWin, nonTrumpMarriage,
+                                  trumpMarriage, arePointsVisible, lastTrickBonus))
+                {
+                    std::cout << "Game saved successfully as '" << fullPath << "'." << std::endl;
+                }
+                else
+                {
+                    std::cout << "Failed to save game." << std::endl;
+                }
+            }
+            else
+            {
+                std::cout << "Usage: save <name>" << std::endl;
+            }
         }
         else if (strcmp(firstCommWord, "load") == 0)
         {
+            // Parse filename from command: "load <name>"
+            char loadFileNameInput[MAX_STR_LEN];
+            char fullPath[MAX_STR_LEN + 5]; // +5 for ".txt\0"
+            if (spacePos + 1 < MAX_STR_LEN && fullComm[spacePos + 1] != '\0')
+            {
+                std::strncpy(loadFileNameInput, fullComm + spacePos + 1, MAX_STR_LEN - (spacePos + 1));
+                loadFileNameInput[MAX_STR_LEN - 1] = '\0'; // Ensure null termination
+
+                // Construct full path with .txt extension
+                std::strcpy(fullPath, loadFileNameInput);
+                std::strcat(fullPath, ".txt");
+
+                if (loadGameState(fullPath, // Pass char* filename
+                                  hasGameStarted, wereSettingsModified, trumpSuit,
+                                  deck, deckSize, currentRoundNumber,
+                                  P1Hand, P1HandSize, P2Hand, P2HandSize,
+                                  thrownCards, thrownCount, firstPlayedPlayerId,
+                                  P1GamePoints, P2GamePoints, P1hasWonCard, P2hasWonCard,
+                                  P1RoundPoints, P2RoundPoints, currentPlayerId, lastRoundWonPlayerId,
+                                  isStockClosed, declaredMarriageSuit, isMarriageDeclaredAndCardMustBePlayed,
+                                  manualStopCall, lastTrickCards, lastTrickWinnerId,
+                                  history, requiredPointsToWin, nonTrumpMarriage,
+                                  trumpMarriage, arePointsVisible, lastTrickBonus))
+                {
+                    // Additional setup after loading
+                    hasGameStarted = true; // A loaded game is definitely started
+                    gameOver = false;      // Restore the game to continue playing
+                    std::cout << "Game loaded successfully from '" << fullPath << "'." << std::endl;
+                }
+                else
+                {
+                    std::cout << "Failed to load game." << std::endl;
+                }
+            }
+            else
+            {
+                std::cout << "Usage: load <name>" << std::endl;
+            }
         }
         else
         {

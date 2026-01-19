@@ -1,5 +1,5 @@
 #pragma once
-// #include <fstream>
+#include <fstream>
 #include <iostream>
 #include <random>
 #include <cstring>
@@ -9,6 +9,8 @@
 
 constexpr int DECK_MAX_SIZE = 24;
 constexpr int HAND_MAX_SIZE = 6;
+
+constexpr int THROWN_CARDS_MAX_NUMBER = 2;
 
 bool isTrump(const Card &card, const char *trumpSuit);
 void initializeDeck(Card deck[DECK_MAX_SIZE], int &deckSize);
@@ -37,3 +39,27 @@ int roundEnd(bool manualStopCall, int lastTrickWinnerId, int &P1RoundPoints, int
              bool P1hasWonCard, bool P2hasWonCard, int &P1GamePoints, int &P2GamePoints);
 void startNewRoundHistory(GameHistory &game, int currentRoundNumber);
 void finalizeCurrentRoundHistory(GameHistory &game, int winnerId, int gamePointsAwardedThisRound, int p1RoundScore, int p2RoundScore);
+
+bool saveGameState(const char *filename,
+                   bool hasGameStarted, bool wereSettingsModified, const char trumpSuit[SUIT_MAX_LENGTH],
+                   const Card deck[DECK_MAX_SIZE], int deckSize, int currentRoundNumber,
+                   const Card P1Hand[HAND_MAX_SIZE], int P1HandSize, const Card P2Hand[HAND_MAX_SIZE], int P2HandSize,
+                   const Card thrownCards[2], int thrownCount, int firstPlayedPlayerId,
+                   int P1GamePoints, int P2GamePoints, bool P1hasWonCard, bool P2hasWonCard,
+                   int P1RoundPoints, int P2RoundPoints, int currentPlayerId, int lastRoundWonPlayerId,
+                   bool isStockClosed, const char declaredMarriageSuit[SUIT_MAX_LENGTH], bool isMarriageDeclaredAndCardMustBePlayed,
+                   bool manualStopCall, const Card lastTrickCards[2], int lastTrickWinnerId,
+                   const GameHistory &history, int requiredPointsToWin, int nonTrumpMarriage,
+                   int trumpMarriage, bool arePointsVisible, bool lastTrickBonus);
+
+bool loadGameState(const char *filename,
+                   bool &hasGameStarted, bool &wereSettingsModified, char trumpSuit[SUIT_MAX_LENGTH],
+                   Card deck[DECK_MAX_SIZE], int &deckSize, int &currentRoundNumber,
+                   Card P1Hand[HAND_MAX_SIZE], int &P1HandSize, Card P2Hand[HAND_MAX_SIZE], int &P2HandSize,
+                   Card thrownCards[2], int &thrownCount, int &firstPlayedPlayerId,
+                   int &P1GamePoints, int &P2GamePoints, bool &P1hasWonCard, bool &P2hasWonCard,
+                   int &P1RoundPoints, int &P2RoundPoints, int &currentPlayerId, int &lastRoundWonPlayerId,
+                   bool &isStockClosed, char declaredMarriageSuit[SUIT_MAX_LENGTH], bool &isMarriageDeclaredAndCardMustBePlayed,
+                   bool &manualStopCall, Card lastTrickCards[2], int &lastTrickWinnerId,
+                   GameHistory &history, int &requiredPointsToWin, int &nonTrumpMarriage,
+                   int &trumpMarriage, bool &arePointsVisible, bool &lastTrickBonus);
