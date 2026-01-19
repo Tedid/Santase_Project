@@ -14,12 +14,7 @@
  */
 
 #include <iostream>
-#include <vector>
 // #include <fstream>
-#include <algorithm>
-#include <random>
-#include <windows.h>
-#include <cctype>
 #include <cstring>
 
 #include "utils.hpp"
