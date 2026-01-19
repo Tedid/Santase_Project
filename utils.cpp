@@ -1,56 +1,43 @@
 #include "utils.hpp"
 
-void setupConsole()
-{
+void setupConsole() {
 #ifdef _WIN32
-    SetConsoleOutputCP(CP_UTF8);
+  SetConsoleOutputCP(CP_UTF8);
 #endif
 }
 
-void setColor(int color)
-{
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+void setColor(int color) { SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color); }
+
+bool isDigit(const char* str) {
+  if (!str) return false;
+  const char* pointer = str;
+  while (*pointer != '\0') {
+    if (!std::isdigit(*pointer)) {
+      return false;
+    }
+    pointer++;
+  }
+  return true;
 }
 
-bool isDigit(const char *str)
-{
-    if (!str)
-        return false;
-    const char *pointer = str;
-    while (*pointer != '\0')
-    {
-        if (!std::isdigit(*pointer))
-        {
-            return false;
-        }
-        pointer++;
+bool getConfirmation(const char* prompt) {
+  std::cout << prompt << " [y/n]: ";
+  char answerChar;
+
+  while (true) {
+    std::cin >> answerChar;  // Read a single character
+
+    // Ignore characters until newline or EOF
+    while (std::cin.get() != '\n');
+
+    char c = std::tolower(answerChar);
+
+    if (c == 'n') {
+      return false;
+    } else if (c == 'y') {
+      return true;
     }
-    return true;
-}
 
-bool getConfirmation(const char *prompt)
-{
-    std::cout << prompt << " [y/n]: ";
-    char answerChar;
-
-    while (true)
-    {
-        std::cin >> answerChar; // Read a single character
-
-        // Ignore characters until newline or EOF
-        while (std::cin.get() != '\n');
-
-        char c = std::tolower(answerChar);
-
-        if (c == 'n')
-        {
-            return false;
-        }
-        else if (c == 'y')
-        {
-            return true;
-        }
-
-        std::cout << "Invalid answer, please try again. [y/n]: ";
-    }
+    std::cout << "Invalid answer, please try again. [y/n]: ";
+  }
 }
