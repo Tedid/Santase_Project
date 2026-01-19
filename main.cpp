@@ -662,8 +662,9 @@ int main() {
         std::cout << std::endl;
         std::cout << "Winner: Player " << lastTrickWinnerId << std::endl;
       }
-    } else if (strcmp(firstCommWord printYellowWordTrump();, "trump") == 0) {
-      "        std::cout << " Trump suit : ";
+    } else if (strcmp(firstCommWord, "trump") == 0) {
+        printYellowWordTrump();
+              std::cout << " suit : ";
                                            printSuitColored(trumpSuit);
       std::cout << std::endl;
     } else if (strcmp(firstCommWord, "history") == 0) {
@@ -678,9 +679,9 @@ int main() {
       std::cout << "Player 2 Game Points: " << P2GamePoints << std::endl;
       std::cout << "Player 1 Round Points: " << P1RoundPoints << std::endl;
       std::cout << "Player 2 Round Points: " << P2RoundPoints << std::endl;
-      std::cout << "Current Player: P" << cu printYellowWordTrump();
-      rrentPlayerId << std::endl;
-      std::cout << "Trump Suit: ";
+      std::cout << "Current Player: P" << currentPlayerId << std::endl;
+      printYellowWordTrump();
+      std::cout << " suit: ";
       printSuitColored(trumpSuit);
       std::cout << std::endl;
       std::cout << "Cards left in deck: " << deckSize << std::endl;
