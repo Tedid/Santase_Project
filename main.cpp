@@ -48,7 +48,7 @@ int main()
     int thrownCount = 0;
 
     int firstPlayedPlayerId = 0;
-    int P1GamePoints = 0, P2Gamepoints = 0;
+    int P1GamePoints = 0, P2GamePoints = 0;
     bool P1hasWonCard = false, P2hasWonCard = false;
     int P1RoundPoints = 0, P2RoundPoints = 0;
 
@@ -191,7 +191,7 @@ int main()
                 }
             }
 
-            P1GamePoints = 0, P2Gamepoints = 0;
+            P1GamePoints = 0, P2GamePoints = 0;
             P1RoundPoints = 0, P2RoundPoints = 0;
             hasGameStarted = true;
             P1hasWonCard = false;
@@ -337,7 +337,7 @@ int main()
                     if (wereSettingsModified)
                     {
                         // Check if a player hasn't already won with updated required points
-                        if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin)
+                        if (P1GamePoints >= requiredPointsToWin || P2GamePoints >= requiredPointsToWin)
                         { // TODO: somehow end the game
                         }
                     }
@@ -517,10 +517,10 @@ int main()
             if (P1HandSize == 0 && P2HandSize == 0)
             {
                 manualStopCall = false;
-                int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2Gamepoints);
+                int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2GamePoints);
 
                 // Check for game winner
-                if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin)
+                if (P1GamePoints >= requiredPointsToWin || P2GamePoints >= requiredPointsToWin)
                 {
                     gameOver = true;
                     std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
@@ -795,7 +795,7 @@ int main()
             }
             std::cout << "--- CURRENT GAME STATUS ---" << std::endl;
             std::cout << "Player 1 Game Points: " << P1GamePoints << std::endl;
-            std::cout << "Player 2 Game Points: " << P2Gamepoints << std::endl;
+            std::cout << "Player 2 Game Points: " << P2GamePoints << std::endl;
             std::cout << "Player 1 Round Points: " << P1RoundPoints << std::endl;
             std::cout << "Player 2 Round Points: " << P2RoundPoints << std::endl;
             std::cout << "Current Player: P" << currentPlayerId << std::endl;
@@ -824,10 +824,10 @@ int main()
         else if (strcmp(firstCommWord, "stop") == 0)
         {
             manualStopCall = true;
-            int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2Gamepoints);
+            int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2GamePoints);
 
             // Check for game winner
-            if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin)
+            if (P1GamePoints >= requiredPointsToWin || P2GamePoints >= requiredPointsToWin)
             {
                 gameOver = true;
                 std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
@@ -858,10 +858,10 @@ int main()
                 (currentPlayerId == 1 ? P2RoundPoints : P1RoundPoints) = 666; // A very big number to ensure opponent wins
 
                 manualStopCall = true;
-                int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2Gamepoints);
+                int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2GamePoints);
 
                 // Check for game winner
-                if (P1GamePoints >= requiredPointsToWin || P2Gamepoints >= requiredPointsToWin)
+                if (P1GamePoints >= requiredPointsToWin || P2GamePoints >= requiredPointsToWin)
                 {
                     gameOver = true;
                     std::cout << "Game Over! Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
