@@ -94,7 +94,7 @@ void deckSort(Card deck[DECK_MAX_SIZE], int deckSize)
     {
         for (int j = 0; j < deckSize - 1 - i; j++) // o p t i m i z a t i o n
         {
-            if (compareCards(deck[j], deck[j + 1]))
+            if (compareCards(deck[j + 1], deck[j]))
             {
                 std::swap(deck[j], deck[j + 1]);
             }
