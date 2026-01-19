@@ -1,3 +1,19 @@
+/**
+ *
+ * Solution to course project # 2
+ * Introduction to programming course
+ * Faculty of Mathematics and Informatics of Sofia University
+ * Winter semester 2025/2026
+ *
+ * @author Teodor Genov
+ * @idnumber 3MI0600648
+ * @compiler GCC
+ *
+ * Cpp file containing function definitions for the main logic.
+ *
+ */
+
+
 #include "gameFunctions.hpp"
 
 const char* COLOR_RED = "\033[31m";
