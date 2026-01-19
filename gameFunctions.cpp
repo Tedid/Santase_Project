@@ -228,6 +228,19 @@ void printSuitColored(const char *suit)
     std::cout << COLOR_CODE << suit << COLOR_RESET;
 }
 
+void printCardIndexes(int handSize)
+{
+    if (handSize > 0)
+    {
+        std::cout << "        "; // 8x spaces
+        for (int i = 0; i < handSize; i++)
+        {
+            std::cout << "[" << i << "] ";
+        }
+        std::cout << std::endl;
+    }
+}
+
 void cardPrint(const Card &card)
 {
     const char *COLOR_CODE = (card.suitValue == 3 || card.suitValue == 2) ? COLOR_RED : COLOR_BLACK;

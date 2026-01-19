@@ -98,32 +98,16 @@ int main()
             std::cout << std::endl;
             if (currentPlayerId == 1)
             {
-                if (P1HandSize > 0)
-                {
-                    std::cout << "        "; // 8x spaces
-                    for (int i = 0; i < P1HandSize; i++)
-                    {
-                        std::cout << "[" << i << "] ";
-                    }
-                    std::cout << std::endl;
-                }
+                printCardIndexes(P1HandSize);
+
                 std::cout << "Hand: ";
                 printPlayerHand(P1Hand, P1HandSize);
                 std::cout << std::endl;
             }
-
             else
             {
-                if (P2HandSize > 0)
-                {
-                    std::cout << "       "; // 7x spaces
-                    for (int i = 0; i < P2HandSize; i++)
-                    {
-                        std::cout << "[" << i << "] ";
-                    }
-                    std::cout << std::endl;
-                }
-
+                printCardIndexes(P2HandSize);
+                
                 std::cout << "Hand: ";
                 printPlayerHand(P2Hand, P2HandSize);
                 std::cout << std::endl;
