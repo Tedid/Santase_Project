@@ -474,7 +474,55 @@ int roundEnd(bool manualStopCall, int lastTrickWinnerId, int &P1RoundPoints, int
     return roundWinnerID;
 }
 
-void recordNewRoundHistory(GameHistory &game, int winnerId, int gamePointsWon, int p1RoundScore, int p2RoundScore)
+void startNewRoundHistory(GameHistory &game, int RoundNumber)
 {
+    int &totalRounds = game.totalRounds;
 
+    if (totalRounds >= MAX_ROUNDS)
+    {
+        for (int i = 1; i < MAX_ROUNDS; ++i)
+        {
+            game.history[i - 1] = game.history[i];
+        }
+
+        totalRounds = MAX_ROUNDS - 1;
+    }
+
+    RoundHistory newOngoingRound;
+    newOngoingRound.roundNumber = RoundNumber;
+    newOngoingRound.winnerId = 0;
+    newOngoingRound.gamePointsWon = 0;
+    newOngoingRound.p1Score = 0;
+    newOngoingRound.p2Score = 0;
+    newOngoingRound.isOngoing = true;
+
+    game.history[totalRounds] = newOngoingRound;
+    totalRounds++;
+}
+
+void finalizeCurrentRoundHistory(GameHistory &game, int winnerId, int gamePointsWon, int p1RoundScore, int p2RoundScore)
+{
+    if (game.totalRounds == 0)
+    {
+        std::cout << "No round found in history to finalize." << std::endl;
+        return;
+    }
+
+    // last entry in history should be an ongoing round
+    RoundHistory &currentRound = game.history[game.totalRounds - 1];
+
+    currentRound.winnerId = winnerId;
+    currentRound.gamePointsWon = gamePointsWon;
+    currentRound.p1Score = p1RoundScore;
+    currentRound.p2Score = p2RoundScore;
+    currentRound.isOngoing = false;
+
+    if (winnerId == 1)
+    {
+        game.overallP1 += gamePointsWon;
+    }
+    else
+    {
+        game.overallP2 += gamePointsWon;
+    }
 }

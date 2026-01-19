@@ -40,6 +40,7 @@ int main()
     char trumpSuit[SUIT_MAX_LENGTH]; // is one of ("♣","♠","♥","♦")
     Card deck[DECK_MAX_SIZE];
     int deckSize = 0;
+    int currentRoundNumber = 0;
 
     Card P1Hand[HAND_MAX_SIZE], P2Hand[HAND_MAX_SIZE];
     int P1HandSize = 0, P2HandSize = 0;
@@ -199,6 +200,8 @@ int main()
             isStockClosed = false;
             isMarriageDeclaredAndCardMustBePlayed = false;
             lastTrickWinnerId = 0;
+            currentRoundNumber = 1;
+            startNewRoundHistory(history, currentRoundNumber);
             initializeDeck(deck, deckSize); // Shuffling deck
             distributeCards(deck, P1Hand, P2Hand, deckSize);
             P1HandSize = HAND_MAX_SIZE;
@@ -517,7 +520,21 @@ int main()
             if (P1HandSize == 0 && P2HandSize == 0)
             {
                 manualStopCall = false;
+                int preChangeP1GamePoints = P1GamePoints;
+                int preChangeP2GamePoints = P2GamePoints;
                 int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard, P1GamePoints, P2GamePoints);
+
+                int wonPoints;
+                if (lastTrickWinnerId == 1)
+                {
+                    wonPoints = P1GamePoints - preChangeP1GamePoints;
+                }
+                else
+                {
+                    wonPoints = P2GamePoints - preChangeP2GamePoints;
+                }
+
+                finalizeCurrentRoundHistory(history, roundWinnerId, wonPoints, P1RoundPoints, P2RoundPoints);
 
                 // Check for game winner
                 if (P1GamePoints >= requiredPointsToWin || P2GamePoints >= requiredPointsToWin)
@@ -534,7 +551,9 @@ int main()
                 isStockClosed = false;
                 isMarriageDeclaredAndCardMustBePlayed = false;
                 lastTrickWinnerId = 0;
+                currentRoundNumber++;
 
+                startNewRoundHistory(history, currentRoundNumber);
                 initializeDeck(deck, deckSize); // Shuffle for next round
                 distributeCards(deck, P1Hand, P2Hand, deckSize);
                 P1HandSize = HAND_MAX_SIZE;

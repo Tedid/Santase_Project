@@ -33,4 +33,5 @@ bool processPlayerCardPlay(Card playerHand[], int &playerHandSize, Card thrownCa
                            const char trumpSuit[], int cardIndex, int playerId, bool isRoundClosed);
 int roundEnd(bool manualStopCall, int lastTrickWinnerId, int &P1RoundPoints, int &P2RoundPoints,
              bool P1hasWonCard, bool P2hasWonCard, int &P1GamePoints, int &P2GamePoints);
-void recordNewRoundHistory(GameHistory &game, int winnerId, int gamePointsWon, int p1RoundScore, int p2RoundScore);
+void startNewRoundHistory(GameHistory &game, int currentRoundNumber);
+void finalizeCurrentRoundHistory(GameHistory &game, int winnerId, int gamePointsAwardedThisRound, int p1RoundScore, int p2RoundScore);
