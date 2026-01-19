@@ -1,4 +1,3 @@
-#include <cstring>
 #include "gameFunctions.hpp"
 
 const char *COLOR_RED = "\033[31m";

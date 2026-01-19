@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
-#include <sstream>
+#include <cstring>
 
 #include "cardStruct.hpp"
 #include "history.hpp"

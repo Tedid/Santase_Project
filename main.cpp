@@ -15,7 +15,6 @@
 
 #include <iostream>
 // #include <fstream>
-#include <cstring>
 
 #include "utils.hpp"
 #include "gameFunctions.hpp"
