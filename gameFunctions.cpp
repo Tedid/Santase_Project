@@ -45,7 +45,7 @@ void initializeDeck(Card deck[DECK_MAX_SIZE], int &deckSize)
             // compute values
             deck[id].suitValue = getSuitValue(deck[id]);
             deck[id].rankValue = getRankValue(deck[id]);
-            id++;   
+            id++;
         }
     }
 
@@ -53,7 +53,6 @@ void initializeDeck(Card deck[DECK_MAX_SIZE], int &deckSize)
 
     // SHUFFLING DECK
     deckShuffle(deck, DECK_MAX_SIZE);
-
 }
 
 void distributeCards(Card deck[DECK_MAX_SIZE], Card P1[], Card P2[], int &deckSize)
@@ -77,6 +76,15 @@ void distributeCards(Card deck[DECK_MAX_SIZE], Card P1[], Card P2[], int &deckSi
     // Sorting hands:
     std::sort(P1, P1 + HAND_MAX_SIZE, compareCards);
     std::sort(P2, P2 + HAND_MAX_SIZE, compareCards);
+}
+
+void deckShuffle(Card deck[DECK_MAX_SIZE], int deckSize)
+{
+    for (int i = 0; i < deckSize; i++)
+    {
+        int randomIndex = std::rand() % deckSize;
+        std::swap(deck[i], deck[randomIndex]);
+    }
 }
 
 void revealTrump(Card deck[DECK_MAX_SIZE], int &deckSize, char *trumpSuit)
