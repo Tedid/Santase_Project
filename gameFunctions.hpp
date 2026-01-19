@@ -29,5 +29,8 @@ void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size);
 void printHistory(const GameHistory &history);
 
 bool isValidPlayWhenClosed(const Card *playerHand, int playerHandSize, const Card &opponentCard, const char *trumpSuit, int playedIndex);
-bool processPlayerCardPlay(Card playerHand[], int &playerHandSize, Card thrownCards[], int &thrownCount, const char trumpSuit[], int cardIndex, int playerId, bool isRoundClosed);
-int roundEnd(bool manualStopCall, int lastTrickWinnerId, int P1RoundPoints, int P2RoundPoints, bool P1hasWonCard, bool P2hasWonCard, int &P1GamePoints, int &P2GamePoints);
+bool processPlayerCardPlay(Card playerHand[], int &playerHandSize, Card thrownCards[], int &thrownCount,
+                           const char trumpSuit[], int cardIndex, int playerId, bool isRoundClosed);
+int roundEnd(bool manualStopCall, int lastTrickWinnerId, int P1RoundPoints, int P2RoundPoints,
+             bool P1hasWonCard, bool P2hasWonCard, int &P1GamePoints, int &P2GamePoints);
+void recordRoundHistory(GameHistory &game, int winnerId, int gamePointsWon, int p1RoundScore, int p2RoundScore);
