@@ -600,7 +600,11 @@ int main()
                     cardPrint(currentCard);
                     std::cout << " (trump suit)" << std::endl;
 
-                    std::sort((currentPlayerId == 1 ? P1Hand : P2Hand), (currentPlayerId == 1 ? P1Hand + P1HandSize : P2Hand + P2HandSize), compareCards);
+                    if(currentPlayerId==1){
+                        deckSort(P1Hand, P1HandSize);
+                    } else {
+                        deckSort(P1Hand, P1HandSize);
+                    }
 
                     break;
                 }

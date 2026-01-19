@@ -74,8 +74,8 @@ void distributeCards(Card deck[DECK_MAX_SIZE], Card P1[], Card P2[], int &deckSi
     }
 
     // Sorting hands:
-    std::sort(P1, P1 + HAND_MAX_SIZE, compareCards);
-    std::sort(P2, P2 + HAND_MAX_SIZE, compareCards);
+    deckSort(P1, HAND_MAX_SIZE);
+    deckSort(P2, HAND_MAX_SIZE);
 }
 
 void deckShuffle(Card deck[DECK_MAX_SIZE], int deckSize)
@@ -84,6 +84,20 @@ void deckShuffle(Card deck[DECK_MAX_SIZE], int deckSize)
     {
         int randomIndex = std::rand() % deckSize;
         std::swap(deck[i], deck[randomIndex]);
+    }
+}
+
+void deckSort(Card deck[DECK_MAX_SIZE], int deckSize)
+{
+    for (int i = 0; i < deckSize - 1; i++) 
+    {
+        for (int j = 0; j < deckSize - 1 - i; j++)   // o p t i m i z a t i o n
+        {
+            if (compareCards(deck[j], deck[j + 1]))
+            {
+                std::swap(deck[j], deck[j + 1]);
+            }
+        }
     }
 }
 
@@ -203,7 +217,7 @@ int dealCard(Card deck[DECK_MAX_SIZE], Card PHand[], int &deckSize, int &handSiz
     handSize++;
     deckSize--;
 
-    std::sort(PHand, PHand + handSize, compareCards);
+    deckSort(PHand, handSize);
 
     return 0;
 }
