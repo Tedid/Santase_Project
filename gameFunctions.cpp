@@ -472,3 +472,8 @@ int roundEnd(bool manualStopCall, int lastTrickWinnerId, int P1RoundPoints, int 
 
     return roundWinnerID;
 }
+
+void recordNewRoundHistory(GameHistory &game, int winnerId, int gamePointsWon, int p1RoundScore, int p2RoundScore)
+{
+
+}
