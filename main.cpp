@@ -325,7 +325,10 @@ int main()
                     {
                         // Check if a player hasn't already won with updated required points
                         if (P1GamePoints >= requiredPointsToWin || P2GamePoints >= requiredPointsToWin)
-                        { // TODO: somehow end the game
+                        {
+                            gameOver = true; // Set game over flag
+                            std::cout << "A player has reached the new points target. Game Over!" << std::endl;
+                            std::cout << "Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
                         }
                     }
 
