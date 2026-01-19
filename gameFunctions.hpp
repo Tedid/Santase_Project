@@ -1,7 +1,6 @@
 #pragma once
 // #include <fstream>
 #include <iostream>
-#include <algorithm>
 #include <random>
 #include <cstring>
 
@@ -14,6 +13,7 @@ constexpr int HAND_MAX_SIZE = 6;
 bool isTrump(const Card &card, const char *trumpSuit);
 void initializeDeck(Card deck[DECK_MAX_SIZE], int &deckSize);
 void distributeCards(Card deck[DECK_MAX_SIZE], Card P1Hand[], Card P2Hand[], int &deckSize);
+void deckShuffle(Card deck[DECK_MAX_SIZE],int deckSize);
 void revealTrump(Card deck[DECK_MAX_SIZE], int &deckSize, char *trumpSuit);
 int getSuitValue(const Card &card);
 int getRankValue(const Card &card);

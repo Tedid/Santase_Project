@@ -33,33 +33,27 @@ void initializeDeck(Card deck[DECK_MAX_SIZE], int &deckSize)
     const char *SUITS[] = {"♣", "♦", "♥", "♠"};
     const char *RANKS[] = {"9", "J", "Q", "K", "10", "A"};
 
-    int idx = 0;
-    for (int j = 0; j < 4; ++j)
+    int id = 0;
+    for (int j = 0; j < 4; j++)
     {
-        for (int i = 0; i < 6; ++i)
+        for (int i = 0; i < 6; i++)
         {
-            std::strncpy(deck[idx].suit, SUITS[j], SUIT_MAX_LENGTH);
-            deck[idx].suit[SUIT_MAX_LENGTH - 1] = '\0';
-            std::strncpy(deck[idx].rank, RANKS[i], RANK_MAX_LENGTH);
-            deck[idx].rank[RANK_MAX_LENGTH - 1] = '\0';
+            std::strncpy(deck[id].suit, SUITS[j], SUIT_MAX_LENGTH);
+            deck[id].suit[SUIT_MAX_LENGTH - 1] = '\0';
+            std::strncpy(deck[id].rank, RANKS[i], RANK_MAX_LENGTH);
+            deck[id].rank[RANK_MAX_LENGTH - 1] = '\0';
             // compute values
-            deck[idx].suitValue = getSuitValue(deck[idx]);
-            deck[idx].rankValue = getRankValue(deck[idx]);
-            ++idx;
+            deck[id].suitValue = getSuitValue(deck[id]);
+            deck[id].rankValue = getRankValue(deck[id]);
+            id++;   
         }
     }
 
     deckSize = DECK_MAX_SIZE;
 
     // SHUFFLING DECK
-    std::shuffle(deck, deck + DECK_MAX_SIZE, std::mt19937{std::random_device{}()});
+    deckShuffle(deck, DECK_MAX_SIZE);
 
-    // // Recompute values in case shuffle or platform affected bytes
-    // for (size_t i = 0; i < DECK_SIZE; ++i)
-    // {
-    //     deck[i].suitValue = getSuitValue(deck[i]);
-    //     deck[i].rankValue = getRankValue(deck[i]);
-    // }
 }
 
 void distributeCards(Card deck[DECK_MAX_SIZE], Card P1[], Card P2[], int &deckSize)
@@ -107,7 +101,7 @@ int getSuitValue(const Card &card)
     const char *SUIT_TO_FIND = card.suit;
 
     // Loop for 4 suits
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
         char currentSuitChar[SUIT_MAX_LENGTH];
         std::strncpy(currentSuitChar, &SUIT_CHARS[i * 3], 3);
@@ -222,7 +216,7 @@ void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size)
 {
     std::cout << "[ ";
 
-    for (size_t i = 0; i < size; ++i)
+    for (size_t i = 0; i < size; i++)
     {
         cardPrint(hand[i]);
 

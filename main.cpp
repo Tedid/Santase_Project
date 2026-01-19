@@ -14,6 +14,8 @@
  */
 
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 // #include <fstream>
 
 #include "utils.hpp"
@@ -31,6 +33,7 @@ constexpr int NUMBER_OF_RANKS = 6;
 int main()
 {
     setupConsole(); // Ensures proper display of suit symbols (♣,♠,♥,♦)
+    std::srand(time(nullptr));
 
     bool hasGameStarted = false;
     bool wereSettingsModified = false;
