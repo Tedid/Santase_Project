@@ -387,7 +387,7 @@ bool processPlayerCardPlay(Card playerHand[], int &playerHandSize, Card thrownCa
     return true;
 }
 
-int roundEnd(bool manualStopCall, int lastTrickWinnerId, int P1RoundPoints, int P2RoundPoints, bool P1hasWonCard, bool P2hasWonCard, int &P1GamePoints, int &P2GamePoints)
+int roundEnd(bool manualStopCall, int lastTrickWinnerId, int &P1RoundPoints, int &P2RoundPoints, bool P1hasWonCard, bool P2hasWonCard, int &P1GamePoints, int &P2GamePoints)
 {
     if (!manualStopCall)
     {

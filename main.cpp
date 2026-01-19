@@ -99,7 +99,7 @@ int main()
             {
                 if (P1HandSize > 0)
                 {
-                    std::cout << "       "; // 7x spaces
+                    std::cout << "        "; // 8x spaces
                     for (int i = 0; i < P1HandSize; i++)
                     {
                         std::cout << "[" << i << "] ";
@@ -600,9 +600,12 @@ int main()
                     cardPrint(currentCard);
                     std::cout << " (trump suit)" << std::endl;
 
-                    if(currentPlayerId==1){
+                    if (currentPlayerId == 1)
+                    {
                         deckSort(P1Hand, P1HandSize);
-                    } else {
+                    }
+                    else
+                    {
                         deckSort(P1Hand, P1HandSize);
                     }
 

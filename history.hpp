@@ -2,7 +2,7 @@
 
 struct RoundHistory
 {
-    int roundNumber;
+    int roundNumber = 1;
     int winnerId;
     int gamePointsWon;
     int p1Score;
