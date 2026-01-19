@@ -18,5 +18,5 @@ struct GameHistory
     int totalRounds = 0;
     int overallP1 = 0;
     int overallP2 = 0;
-    int currentPlayerId = 1;
+    // int currentPlayerId = 1;
 };
