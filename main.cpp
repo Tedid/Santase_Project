@@ -9,7 +9,9 @@
  * @idnumber 3MI0600648
  * @compiler GCC
  *
- * This project is an emulator to the familiar card game for two - Santase.
+ * A C++ terminal-based implementation of the traditional 
+ * two-player card game Santase (66), featuring full game logic,
+ * customizable rules and save/load functionality.
  *
  */
 
