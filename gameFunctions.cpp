@@ -89,9 +89,9 @@ void deckShuffle(Card deck[DECK_MAX_SIZE], int deckSize)
 
 void deckSort(Card deck[DECK_MAX_SIZE], int deckSize)
 {
-    for (int i = 0; i < deckSize - 1; i++) 
+    for (int i = 0; i < deckSize - 1; i++)
     {
-        for (int j = 0; j < deckSize - 1 - i; j++)   // o p t i m i z a t i o n
+        for (int j = 0; j < deckSize - 1 - i; j++) // o p t i m i z a t i o n
         {
             if (compareCards(deck[j], deck[j + 1]))
             {
@@ -250,6 +250,7 @@ void printPlayerHand(const Card hand[HAND_MAX_SIZE], size_t size)
 
 void printHistory(const GameHistory &game)
 {
+    std::cout << "History for the last " << game.totalRounds << (game.totalRounds == 1 ? " round:" : " rounds:") << std::endl;
     for (int i = 0; i < game.totalRounds; i++)
     {
         const RoundHistory &round = game.history[i];
