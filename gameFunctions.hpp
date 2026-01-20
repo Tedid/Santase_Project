@@ -60,18 +60,21 @@ void finalizeCurrentRoundHistory(GameHistory& game, int winnerId, int gamePoints
 
 bool saveGameState(const char* filename, bool hasGameStarted, bool wereSettingsModified, const char trumpSuit[SUIT_MAX_LENGTH],
                    const Card deck[DECK_MAX_SIZE], int deckSize, int currentRoundNumber, const Card P1Hand[HAND_MAX_SIZE],
-                   int P1HandSize, const Card P2Hand[HAND_MAX_SIZE], int P2HandSize, const Card thrownCards[2], int thrownCount,
-                   int firstPlayedPlayerId, int P1GamePoints, int P2GamePoints, bool P1hasWonCard, bool P2hasWonCard,
-                   int P1RoundPoints, int P2RoundPoints, int currentPlayerId, int lastRoundWonPlayerId, bool isStockClosed,
+                   int P1HandSize, const Card P2Hand[HAND_MAX_SIZE], int P2HandSize,
+                   const Card thrownCards[THROWN_CARDS_MAX_NUMBER], int thrownCount, int firstPlayedPlayerId, int P1GamePoints,
+                   int P2GamePoints, bool P1hasWonCard, bool P2hasWonCard, int P1RoundPoints, int P2RoundPoints,
+                   int currentPlayerId, int lastRoundWonPlayerId, bool isStockClosed,
                    const char declaredMarriageSuit[SUIT_MAX_LENGTH], bool isMarriageDeclaredAndCardMustBePlayed,
-                   bool manualStopCall, const Card lastTrickCards[2], int lastTrickWinnerId, const GameHistory& history,
-                   int requiredPointsToWin, int nonTrumpMarriage, int trumpMarriage, bool arePointsVisible, bool lastTrickBonus);
+                   bool manualStopCall, const Card lastTrickCards[THROWN_CARDS_MAX_NUMBER], int lastTrickWinnerId,
+                   const GameHistory& history, int requiredPointsToWin, int nonTrumpMarriage, int trumpMarriage,
+                   bool arePointsVisible, bool lastTrickBonus);
 
 bool loadGameState(const char* filename, bool& hasGameStarted, bool& wereSettingsModified, char trumpSuit[SUIT_MAX_LENGTH],
                    Card deck[DECK_MAX_SIZE], int& deckSize, int& currentRoundNumber, Card P1Hand[HAND_MAX_SIZE], int& P1HandSize,
-                   Card P2Hand[HAND_MAX_SIZE], int& P2HandSize, Card thrownCards[2], int& thrownCount, int& firstPlayedPlayerId,
-                   int& P1GamePoints, int& P2GamePoints, bool& P1hasWonCard, bool& P2hasWonCard, int& P1RoundPoints,
-                   int& P2RoundPoints, int& currentPlayerId, int& lastRoundWonPlayerId, bool& isStockClosed,
+                   Card P2Hand[HAND_MAX_SIZE], int& P2HandSize, Card thrownCards[THROWN_CARDS_MAX_NUMBER], int& thrownCount,
+                   int& firstPlayedPlayerId, int& P1GamePoints, int& P2GamePoints, bool& P1hasWonCard, bool& P2hasWonCard,
+                   int& P1RoundPoints, int& P2RoundPoints, int& currentPlayerId, int& lastRoundWonPlayerId, bool& isStockClosed,
                    char declaredMarriageSuit[SUIT_MAX_LENGTH], bool& isMarriageDeclaredAndCardMustBePlayed, bool& manualStopCall,
-                   Card lastTrickCards[2], int& lastTrickWinnerId, GameHistory& history, int& requiredPointsToWin,
-                   int& nonTrumpMarriage, int& trumpMarriage, bool& arePointsVisible, bool& lastTrickBonus);
+                   Card lastTrickCards[THROWN_CARDS_MAX_NUMBER], int& lastTrickWinnerId, GameHistory& history,
+                   int& requiredPointsToWin, int& nonTrumpMarriage, int& trumpMarriage, bool& arePointsVisible,
+                   bool& lastTrickBonus);
