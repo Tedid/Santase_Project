@@ -646,6 +646,21 @@ int main() {
         std::cout << " in your hand." << std::endl;
       }
     } else if (strcmp(firstCommWord, "close") == 0) {
+      if (thrownCount != 0) {
+        std::cout << "You can only close the stock before any cards are played in the current trick." << std::endl;
+        continue;
+      }
+
+      if (!(currentPlayerId == 1 ? P1hasWonCard : P2hasWonCard)) {
+        std::cout << "You must have won at least one trick to close the stock." << std::endl;
+        continue;
+      }
+
+      if (deckSize <= 2) {
+        std::cout << "The stock must have more than two cards to be closed." << std::endl;
+        continue;
+      }
+      
       isStockClosed = true;
       std::cout << "Stock closed. No more cards will be drawn.\nStrict rules "
                    "are now in effect"
