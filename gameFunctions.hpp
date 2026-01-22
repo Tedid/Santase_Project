@@ -53,7 +53,7 @@ bool isValidPlayWhenClosed(const Card* playerHand, int playerHandSize, const Car
 bool processPlayerCardPlay(Card playerHand[], int& playerHandSize, Card thrownCards[], int& thrownCount, const char trumpSuit[],
                            int cardIndex, int playerId, bool isRoundClosed);
 int roundEnd(bool manualStopCall, int lastTrickWinnerId, int& P1RoundPoints, int& P2RoundPoints, bool P1hasWonCard,
-             bool P2hasWonCard, int& P1GamePoints, int& P2GamePoints);
+             bool P2hasWonCard, int& P1GamePoints, int& P2GamePoints, bool lastTrickBonus);
 void startNewRoundHistory(GameHistory& game, int currentRoundNumber);
 void finalizeCurrentRoundHistory(GameHistory& game, int winnerId, int gamePointsAwardedThisRound, int p1RoundScore,
                                  int p2RoundScore);

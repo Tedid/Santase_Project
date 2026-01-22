@@ -208,7 +208,7 @@ int main() {
               std::cout << "Points target changed to " << requiredPointsToWin << "." << std::endl;
               break;
             } else {
-              std::cout << "Invalid input. Try again" << std::endl;
+              std::cout << "Invalid input. Try again" << std::endl << std::endl;
             }
           }
 
@@ -423,8 +423,8 @@ int main() {
         manualStopCall = false;
         int preChangeP1GamePoints = P1GamePoints;
         int preChangeP2GamePoints = P2GamePoints;
-        int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard,
-                                     P1GamePoints, P2GamePoints);
+        int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints,
+                                     P1hasWonCard, P2hasWonCard, P1GamePoints, P2GamePoints, lastTrickBonus);
 
         int wonPoints;
         if (lastTrickWinnerId == 1) {
@@ -716,7 +716,7 @@ int main() {
     } else if (strcmp(firstCommWord, "stop") == 0) {
       manualStopCall = true;
       int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard,
-                                   P1GamePoints, P2GamePoints);
+                                   P1GamePoints, P2GamePoints, lastTrickBonus);
 
       // Check for game winner
       if (P1GamePoints >= requiredPointsToWin || P2GamePoints >= requiredPointsToWin) {
@@ -746,7 +746,7 @@ int main() {
 
         manualStopCall = true;
         int roundWinnerId = roundEnd(manualStopCall, lastTrickWinnerId, P1RoundPoints, P2RoundPoints, P1hasWonCard, P2hasWonCard,
-                                     P1GamePoints, P2GamePoints);
+                                     P1GamePoints, P2GamePoints, lastTrickBonus);
 
         // Check for game winner
         if (P1GamePoints >= requiredPointsToWin || P2GamePoints >= requiredPointsToWin) {

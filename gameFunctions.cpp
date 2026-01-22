@@ -366,8 +366,8 @@ bool processPlayerCardPlay(Card playerHand[], int& playerHandSize, Card thrownCa
 }
 
 int roundEnd(bool manualStopCall, int lastTrickWinnerId, int& P1RoundPoints, int& P2RoundPoints, bool P1hasWonCard,
-             bool P2hasWonCard, int& P1GamePoints, int& P2GamePoints) {
-  if (!manualStopCall) {
+             bool P2hasWonCard, int& P1GamePoints, int& P2GamePoints, bool lastTrickBonus) {
+  if (!manualStopCall && lastTrickBonus) {
     if (lastTrickWinnerId == 1)
       P1RoundPoints += 10;
     else if (lastTrickWinnerId == 2)
