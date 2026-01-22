@@ -525,10 +525,7 @@ int main() {
         std::cout << std::endl;
       }
     } else if (strcmp(firstCommWord, "marriage") == 0) {
-      if (isStockClosed) {
-        std::cout << "Stock is closed, you cannot declare a marriage." << std::endl;
-        continue;
-      }
+      
       if (thrownCount == 1) {  // If a card has already been played in this trick
         std::cout << "You cannot declare a marriage after the first card of "
                      "the trick has been played."
