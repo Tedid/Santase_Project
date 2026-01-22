@@ -9,10 +9,10 @@
  * @idnumber 3MI0600648
  * @compiler GCC
  *
- * A cpp file containing the main game loop 
- * 
+ * A cpp file containing the main game loop
+ *
  * Description:
- * A C++ terminal-based implementation of the traditional 
+ * A C++ terminal-based implementation of the traditional
  * two-player card game Santase (66), featuring full game logic,
  * customizable rules and save/load functionality.
  *
@@ -276,7 +276,7 @@ int main() {
           if (wereSettingsModified) {
             // Check if a player hasn't already won with updated required points
             if (P1GamePoints >= requiredPointsToWin || P2GamePoints >= requiredPointsToWin) {
-              gameOver = true;  
+              gameOver = true;
               std::cout << "A player has reached the new points target. Game Over!" << std::endl;
               std::cout << "Player " << (P1GamePoints >= requiredPointsToWin ? "1" : "2") << " wins the match!" << std::endl;
             }
@@ -316,23 +316,21 @@ int main() {
                        "marriage suit (";
           printSuitColored(declaredMarriageSuit);
           std::cout << ")!" << std::endl;
-          continue; 
+          continue;
         }
-        
+
         isMarriageDeclaredAndCardMustBePlayed = false;
       }
 
       bool playSuccessful = false;
       if (currentPlayerId == 1) {
         playSuccessful = processPlayerCardPlay(P1Hand, P1HandSize, thrownCards, thrownCount, trumpSuit, index, 1, isStockClosed);
-      } else  
-      {
+      } else {
         playSuccessful = processPlayerCardPlay(P2Hand, P2HandSize, thrownCards, thrownCount, trumpSuit, index, 2, isStockClosed);
       }
 
       if (!playSuccessful) {
-        continue;  
-                   
+        continue;
       }
 
       // If a player puts the first hand on the "table":
@@ -345,22 +343,26 @@ int main() {
         Card firstCard = thrownCards[0];
         Card secondCard = thrownCards[1];
 
-        if (isTrump(firstCard, trumpSuit) && !isTrump(secondCard, trumpSuit)) {  // only first card is a trump
-          P1WinsTrick = (firstPlayedPlayerId == 1);  // when first player plays first, he gives the trump
-        } else if (!isTrump(firstCard, trumpSuit) && isTrump(secondCard,trumpSuit)) {  // only second card is a trump
-          P1WinsTrick = (firstPlayedPlayerId == 2);                                    // when second player played first,
-                                                                                       // then first player played trump
-        } else if (isTrump(secondCard, trumpSuit) && isTrump(firstCard, trumpSuit)) {  // Both cards are trump
-          P1WinsTrick = compareCards(firstCard, secondCard);                           // Stronger card wins
-        } else {                                                                       // Both cards are non-trump
-          const char* DOMINANT_SUIT = getSuit(firstPlayedPlayerId == 1 ? firstCard : secondCard);
+        if (isTrump(firstCard, trumpSuit) && !isTrump(secondCard, trumpSuit)) {
+          // Only the first card played is a trump. The player who played the trump wins.
+          P1WinsTrick = (firstPlayedPlayerId == 1);
+        } else if (!isTrump(firstCard, trumpSuit) && isTrump(secondCard, trumpSuit)) {
+          // Only the second card played is a trump. The player who played the trump wins.
+          P1WinsTrick = (firstPlayedPlayerId == 2);
+        } else if (isTrump(secondCard, trumpSuit) && isTrump(firstCard, trumpSuit)) {
+          // Both cards are trump. The stronger trump card wins.
+          P1WinsTrick = (firstPlayedPlayerId == 1) ? compareCards(firstCard, secondCard) : compareCards(secondCard, firstCard);
+        } else {
+          // Both cards are non-trump
           // Dominant suit is the first played card's suit
+          const char* DOMINANT_SUIT = getSuit(firstCard);
 
-          if (std::strcmp(getSuit(secondCard), DOMINANT_SUIT) != 0) {  // If second card's suit doesn't match the first one
+          if (std::strcmp(getSuit(secondCard), DOMINANT_SUIT) != 0) {
+            // If second card's suit doesn't match the first one
             P1WinsTrick = (firstPlayedPlayerId == 1);
-            // If P1 played first, he wins the trick
           } else {
-            P1WinsTrick = compareCards(firstCard, secondCard);  // Stronger card wins
+            // Stronger card wins
+            P1WinsTrick = (firstPlayedPlayerId == 1) ? compareCards(firstCard, secondCard) : compareCards(secondCard, firstCard);
           }
         }
 
@@ -471,12 +473,12 @@ int main() {
         continue;
       }
 
-      if (deckSize == 0) {
+      if (deckSize <= 0) {
         std::cout << "Deck is empty, you can't switch-nine" << std::endl;
         continue;
       }
 
-      if (deckSize >= 2) {
+      if (deckSize <= 2) {
         std::cout << "Deck has only two cards, you can't switch-nine" << std::endl;
         continue;
       }
@@ -486,7 +488,7 @@ int main() {
       nine_Trump.suit[SUIT_MAX_LENGTH - 1] = '\0';
       std::strncpy(nine_Trump.rank, "9", RANK_MAX_LENGTH);
       nine_Trump.rank[RANK_MAX_LENGTH - 1] = '\0';
-      
+
       nine_Trump.suitValue = getSuitValue(nine_Trump);
       nine_Trump.rankValue = getRankValue(nine_Trump);
 
@@ -511,7 +513,7 @@ int main() {
           if (currentPlayerId == 1) {
             deckSort(P1Hand, P1HandSize);
           } else {
-            deckSort(P1Hand, P1HandSize);
+            deckSort(P2Hand, P1HandSize);
           }
 
           break;
@@ -661,9 +663,9 @@ int main() {
         std::cout << "Winner: Player " << lastTrickWinnerId << std::endl;
       }
     } else if (strcmp(firstCommWord, "trump") == 0) {
-        printYellowWordTrump();
-              std::cout << " suit : ";
-                                           printSuitColored(trumpSuit);
+      printYellowWordTrump();
+      std::cout << " suit : ";
+      printSuitColored(trumpSuit);
       std::cout << std::endl;
     } else if (strcmp(firstCommWord, "history") == 0) {
       printHistory(history);
@@ -767,19 +769,18 @@ int main() {
       char fullPath[MAX_STR_LEN + 5];  // +5 for ".txt\0"
       if (spacePos + 1 < MAX_STR_LEN && fullComm[spacePos + 1] != '\0') {
         std::strncpy(saveFileNameInput, fullComm + spacePos + 1, MAX_STR_LEN - (spacePos + 1));
-        saveFileNameInput[MAX_STR_LEN - 1] = '\0';  
+        saveFileNameInput[MAX_STR_LEN - 1] = '\0';
 
         // Construct full path with .txt extension
         std::strcpy(fullPath, saveFileNameInput);
         std::strcat(fullPath, ".txt");
 
-        if (saveGameState(fullPath,  
-                          hasGameStarted, wereSettingsModified, trumpSuit, deck, deckSize, currentRoundNumber, P1Hand, P1HandSize,
-                          P2Hand, P2HandSize, thrownCards, thrownCount, firstPlayedPlayerId, P1GamePoints, P2GamePoints,
-                          P1hasWonCard, P2hasWonCard, P1RoundPoints, P2RoundPoints, currentPlayerId, lastRoundWonPlayerId,
-                          isStockClosed, declaredMarriageSuit, isMarriageDeclaredAndCardMustBePlayed, manualStopCall,
-                          lastTrickCards, lastTrickWinnerId, history, requiredPointsToWin, nonTrumpMarriage, trumpMarriage,
-                          arePointsVisible, lastTrickBonus)) {
+        if (saveGameState(fullPath, hasGameStarted, wereSettingsModified, trumpSuit, deck, deckSize, currentRoundNumber, P1Hand,
+                          P1HandSize, P2Hand, P2HandSize, thrownCards, thrownCount, firstPlayedPlayerId, P1GamePoints,
+                          P2GamePoints, P1hasWonCard, P2hasWonCard, P1RoundPoints, P2RoundPoints, currentPlayerId,
+                          lastRoundWonPlayerId, isStockClosed, declaredMarriageSuit, isMarriageDeclaredAndCardMustBePlayed,
+                          manualStopCall, lastTrickCards, lastTrickWinnerId, history, requiredPointsToWin, nonTrumpMarriage,
+                          trumpMarriage, arePointsVisible, lastTrickBonus)) {
           std::cout << "Game saved successfully as '" << fullPath << "'." << std::endl;
         } else {
           std::cout << "Failed to save game." << std::endl;
@@ -793,22 +794,20 @@ int main() {
       char fullPath[MAX_STR_LEN + 5];  // +5 for ".txt\0"
       if (spacePos + 1 < MAX_STR_LEN && fullComm[spacePos + 1] != '\0') {
         std::strncpy(loadFileNameInput, fullComm + spacePos + 1, MAX_STR_LEN - (spacePos + 1));
-        loadFileNameInput[MAX_STR_LEN - 1] = '\0';  
+        loadFileNameInput[MAX_STR_LEN - 1] = '\0';
 
         // Construct full path with .txt extension
         std::strcpy(fullPath, loadFileNameInput);
         std::strcat(fullPath, ".txt");
 
-        if (loadGameState(fullPath,  
-                          hasGameStarted, wereSettingsModified, trumpSuit, deck, deckSize, currentRoundNumber, P1Hand, P1HandSize,
-                          P2Hand, P2HandSize, thrownCards, thrownCount, firstPlayedPlayerId, P1GamePoints, P2GamePoints,
-                          P1hasWonCard, P2hasWonCard, P1RoundPoints, P2RoundPoints, currentPlayerId, lastRoundWonPlayerId,
-                          isStockClosed, declaredMarriageSuit, isMarriageDeclaredAndCardMustBePlayed, manualStopCall,
-                          lastTrickCards, lastTrickWinnerId, history, requiredPointsToWin, nonTrumpMarriage, trumpMarriage,
-                          arePointsVisible, lastTrickBonus)) {
-                            
-          hasGameStarted = true;  
-          gameOver = false;       
+        if (loadGameState(fullPath, hasGameStarted, wereSettingsModified, trumpSuit, deck, deckSize, currentRoundNumber, P1Hand,
+                          P1HandSize, P2Hand, P2HandSize, thrownCards, thrownCount, firstPlayedPlayerId, P1GamePoints,
+                          P2GamePoints, P1hasWonCard, P2hasWonCard, P1RoundPoints, P2RoundPoints, currentPlayerId,
+                          lastRoundWonPlayerId, isStockClosed, declaredMarriageSuit, isMarriageDeclaredAndCardMustBePlayed,
+                          manualStopCall, lastTrickCards, lastTrickWinnerId, history, requiredPointsToWin, nonTrumpMarriage,
+                          trumpMarriage, arePointsVisible, lastTrickBonus)) {
+          hasGameStarted = true;
+          gameOver = false;
           std::cout << "Game loaded successfully from '" << fullPath << "'." << std::endl;
         } else {
           std::cout << "Failed to load game." << std::endl;

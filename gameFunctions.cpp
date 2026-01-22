@@ -104,9 +104,9 @@ void deckSort(Card deck[DECK_MAX_SIZE], int deckSize) {
 }
 
 void revealTrump(Card deck[DECK_MAX_SIZE], int& deckSize, char* trumpSuit) {
-  Card& topCard = deck[deckSize - 1];
+  Card topCard = deck[deckSize - 1];
   // shift up by one
-  for (int i = DECK_MAX_SIZE - 1; i >= 1; i--) {
+  for (int i = deckSize - 1; i >= 1; i--) {
     deck[i] = deck[i - 1];
     if (i == 1) break;
   }
